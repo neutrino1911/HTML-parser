@@ -15,11 +15,11 @@ class Parser {
     static Statement statement;
 
     public static void main(String[] args) throws FileNotFoundException {
-        PrintStream out = new PrintStream(new FileOutputStream("out.log", true));
+        PrintStream out = new PrintStream(new FileOutputStream("out/out.log", true));
         PrintStream dual = new DualStream(System.out, out);
         System.setOut(dual);
 
-        PrintStream err = new PrintStream(new FileOutputStream("err.log", true));
+        PrintStream err = new PrintStream(new FileOutputStream("out/err.log", true));
         dual= new DualStream(System.err, err);
         System.setErr(dual);
 
