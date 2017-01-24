@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import java.io.*;
 import java.util.Iterator;
 
-public class Test {
+class Test {
 
     private void writeXLS(HSSFWorkbook workbook, String filename) {
         FileOutputStream out;

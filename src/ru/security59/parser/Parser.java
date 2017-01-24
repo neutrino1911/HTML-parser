@@ -93,12 +93,12 @@ class Parser {
         try {
             ResultSet resultSet;
             Shop shop;
-            for (int index = 0; index < targets.length; index++) {
-                query = String.format("CALL getTargetById(%d);", targets[index]);
+            for (int targetId : targets) {
+                query = String.format("CALL getTargetById(%d);", targetId);
                 resultSet = statement.executeQuery(query);
                 resultSet.next();
                 Target target = new Target(
-                        targets[index],
+                        targetId,
                         resultSet.getInt("cat_id"),
                         resultSet.getInt("last_id"),
                         resultSet.getInt("vend_id"),
@@ -121,7 +121,7 @@ class Parser {
                         shop = new Nag();
                         break;
                     default:
-                        System.out.printf("Wrong target domain: %s id: %d\r\n", domain, targets[index]);
+                        System.out.printf("Wrong target domain: %s id: %d\r\n", domain, targetId);
                         continue;
                 }
                 shop.parseItemByTarget(target, false, false);
