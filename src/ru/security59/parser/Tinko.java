@@ -15,9 +15,9 @@ class Tinko extends Shop {
         Elements elements;
         while (true) {
             doc = getDocument(uri, 10000);
-            elements = doc.select("div.product-name > a");
+            elements = doc.select("article.goods > a.goods_name");
             for (Element element : elements)
-                if (element.attr("href").startsWith(DOMAIN)) links.add(element.attr("href"));
+                if (element.attr("href").startsWith("http")) links.add(element.attr("href"));
                 else links.add(DOMAIN + element.attr("href"));
             if (doc.select("a.next").size() == 0) break;
             uri = doc.select("a.next").get(0).attr("href");

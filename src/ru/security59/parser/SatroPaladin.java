@@ -4,147 +4,62 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
-
-import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
 class SatroPaladin extends Shop {
-    private LinkedList<String[]> itemList = new LinkedList<>();
-
-    LinkedList<String[]> getPriceList(LinkedList<String[]> config, LinkedList<String[]> export) {
-        LinkedList<String[]> pages = getAllPages(config);
-        for (String[] page : pages)
-            itemList.addAll(getItemPrices(page[25]));
-        for (String[] item : itemList) {
-            for (String[] oldItem : export) {
-                if (item[1].equals(oldItem[1])) {
-                    //Код товара
-                    item[0] = oldItem[0];
-                    //Валюта
-                    item[6] = oldItem[6];
-                    //Единица измерения
-                    item[7] = oldItem[7];
-                    //Идентификатор
-                    item[19] = oldItem[19];
-                    break;
-                }
-            }
-        }
-        return itemList;
-    }
-
-    private LinkedList<String[]> getItemPrices(String uri) {
-        LinkedList<String[]> data = new LinkedList<>();
-        Document doc = getDocument(uri, 10000);
-        if (doc == null) return data;
-        String selector = "article.goods";
-        Elements elements = doc.select(selector);
-        Elements name;
-        Elements price;
-        Elements manuf;
-        String manufacturer;
-        String[] item;
-        for (Element element : elements) {
-            item = new String[27];
-            //Название
-            manuf = element.select("p.brand");
-            manufacturer = manuf.get(0).childNode(0).toString().trim();
-            name = element.select("a.goods_name");
-            if (name.size() > 0)
-                item[1] = name.get(0).childNode(0).toString().trim();
-            if (!item[1].toLowerCase().startsWith(manufacturer.toLowerCase()))
-                item[1] = manufacturer + " " + item[1];
-            //Цена
-            price = element.select("span.price-lbl");
-            if (price.size() > 0)
-                item[5] = price.get(0).childNode(0).toString().replace("&nbsp;", "").replace("руб.", "");
-            //Наличие
-            if (item[5] == null) item[12] = "0";
-            else item[12] = "+";
-            data.add(item);
-        }
-        return data;
-    }
-
-    private LinkedList<String[]> getAllPages(LinkedList<String[]> config) {
-        //LinkedList<String[]> list = getPatterns(config);
-        LinkedList<String[]> newList = new LinkedList<>();
-        /*Document doc;
-        String[] item;
-        int count;
-        int pages;
-        for (String[] str : list) {
-            doc = getDocument(str[26], 10000);
-            count = Integer.parseInt(doc.select("p.count_search > span").get(0).childNode(0).toString());
-            pages = (count % 25 > 0) ? count / 25 + 1 : count / 25;
-            for (int i = 0; i < pages; i++) {
-                item = str.clone();
-                item[26] = str[26] + "&page=" + (i + 1);
-                newList.add(item);
-            }
-        }*/
-        return newList;
-    }
+    private static final String DOMAIN = "http://www.satro-paladin.com";
 
     protected LinkedList<String> getItemsURI(String uri) {
         LinkedList<String> links = new LinkedList<>();
-        Document doc = getDocument(uri, 10000);
-        String selector = "div.old_content > a.goods_name";
-        Elements elements = doc.select(selector);
-        for (Element element : elements)
-            if (element.attr("href").startsWith("http://"))
-                links.add(element.attr("href"));
-            else
-                links.add("http://satro-paladin.com" + element.attr("href"));
+        Document doc;
+        Elements elements;
+        while (true) {
+            doc = getDocument(uri, 10000);
+            elements = doc.select("div.old_content > a.goods_name");
+            for (Element element : elements)
+                if (element.attr("href").startsWith("http")) links.add(element.attr("href"));
+                else links.add(DOMAIN + element.attr("href"));
+            elements = doc.select("div.paginator > div > *:last-child");
+            if (elements.size() == 0 || "b".equals(elements.get(0).tagName())) break;
+            uri = doc.select("div.paginator > div > *:nth-last-child(2)").get(0).attr("href");
+            if (!uri.startsWith("http")) uri = DOMAIN + uri;
+        }
         return links;
     }
 
-    protected Map<String, String> getItemData(String uri) {
-        Map<String, String> data = new HashMap<>();
-        String name = "";
-        String description = "";
-        String price = "";
-        String images = "";
-        String availability;
-
-        Document doc = getDocument(uri, 10000);
-        if (doc == null) return null;
+    protected void getItemData(Item item) {
+        Document doc = getDocument(item.getOriginURL(), 10000);
+        if (doc == null) return;
         Elements elements;
 
         //Название
-        elements = doc.select("div.rown > div.left > h1");
+        elements = doc.select("h1");
         if (elements.size() > 0)
-            name = elements.get(0).childNode(0).toString().trim();
+            item.setName(elements.get(0).childNode(0).toString().trim());
 
         //Описание
         elements = doc.select("div#good_desc.desc");
+        //elements.select("a").remove();
+        //elements.select("img").remove();
+        //elements.select("*").removeAttr("style");
         if (elements.size() > 0)
-            description = escapeHtml4(elements.get(0).childNode(0).toString().trim());
+            item.setDescription(elements.get(0).childNode(0).toString().trim());
 
         //Цена
-        elements = doc.select("div.right > p.price");
+        elements = doc.select("p.price.retail-price");
+        elements.select("span").remove();
         if (elements.size() > 0)
-            price = elements.get(0).childNode(1).toString().replace(" ", "").replace("&nbsp;", "");
-
-        //Изображение
-        elements = doc.select("img.goodImg");
-        if (elements.size() > 0)
-            images = "http://satro-paladin.com" + elements.get(0).attr("src").replaceAll(",", "%2C");
+            item.setPrice(elements.get(0).childNode(0).toString().trim());
 
         //Наличие
-        if ("".equals(price)) availability = "0";
-        else availability = "+";
+        if ("0".equals(item.getPrice())) item.setAvailability("0");
+        else item.setAvailability("+");
 
-        data.put("prod_name", name);
-        data.put("prod_desc", description);
-        data.put("price", price);
-        data.put("images", images);
-        data.put("availability", availability);
-
-        return data;
+        //Изображение
+        elements = doc.select("a.colorbox.cboxElement");
+        for (Element element : elements) {
+            String image = element.attr("href").replaceAll(",", "%2C");
+            item.addImage(image.startsWith("http") ? image : DOMAIN + image);
+        }
     }
-
-    protected void getItemData(Item item) { }
 }

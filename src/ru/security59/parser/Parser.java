@@ -120,6 +120,9 @@ class Parser {
                     case "shop.nag.ru":
                         shop = new Nag();
                         break;
+                    case "www.satro-paladin.com":
+                        shop = new SatroPaladin();
+                        break;
                     default:
                         System.out.printf("Wrong target domain: %s id: %d\r\n", domain, targetId);
                         continue;
