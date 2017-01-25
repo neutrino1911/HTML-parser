@@ -29,6 +29,13 @@ class Item {
         images = new LinkedList<>();
     }
 
+    Item(int id, String price, String availability, String originUrl) {
+        this.id = id;
+        this.price = price;
+        this.availability=availability;
+        this.originURL = originUrl;
+    }
+
     void addImage(String image) {
         images.add(image);
     }
@@ -86,7 +93,7 @@ class Item {
     }
 
     void setDescription(String description) {
-        this.description = escapeHtml4(description);
+        this.description = escapeHtml4(description.trim());
     }
 
     LinkedList<String> getImages() {
@@ -102,7 +109,7 @@ class Item {
     }
 
     void setName(String name, boolean addVendor) {
-        this.name = escapeHtml4(name);
+        this.name = escapeHtml4(name.trim());
         if (addVendor) addVendorToName();
 
         seoURL = Transliterator.cyr2lat(this.name.toLowerCase());

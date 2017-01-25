@@ -20,6 +20,7 @@ class Rvi extends Shop {
         return null;
     }
 
+    @Override
     protected LinkedList<String> getItemsURI(String uri) {
         LinkedList<String> links = new LinkedList<>();
         Document doc;
@@ -88,5 +89,9 @@ class Rvi extends Shop {
         return data;
     }
 
-    protected void getItemData(Item item) { }
+    @Override
+    protected void getItemData(Item item) {}
+
+    @Override
+    protected void getItemPrice(Item item) {}
 }

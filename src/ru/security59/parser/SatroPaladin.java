@@ -9,6 +9,7 @@ import java.util.LinkedList;
 class SatroPaladin extends Shop {
     private static final String DOMAIN = "http://www.satro-paladin.com";
 
+    @Override
     protected LinkedList<String> getItemsURI(String uri) {
         LinkedList<String> links = new LinkedList<>();
         Document doc;
@@ -27,6 +28,7 @@ class SatroPaladin extends Shop {
         return links;
     }
 
+    @Override
     protected void getItemData(Item item) {
         Document doc = getDocument(item.getOriginURL(), 10000);
         if (doc == null) return;
@@ -35,7 +37,7 @@ class SatroPaladin extends Shop {
         //Название
         elements = doc.select("h1");
         if (elements.size() > 0)
-            item.setName(elements.get(0).childNode(0).toString().trim());
+            item.setName(elements.get(0).childNode(0).toString());
 
         //Описание
         elements = doc.select("div#good_desc.desc");
@@ -43,23 +45,40 @@ class SatroPaladin extends Shop {
         //elements.select("img").remove();
         //elements.select("*").removeAttr("style");
         if (elements.size() > 0)
-            item.setDescription(elements.get(0).childNode(0).toString().trim());
+            item.setDescription(elements.get(0).childNode(0).toString());
 
         //Цена
         elements = doc.select("p.price.retail-price");
         elements.select("span").remove();
         if (elements.size() > 0)
-            item.setPrice(elements.get(0).childNode(0).toString().trim());
+            item.setPrice(elements.get(0).childNode(0).toString());
 
         //Наличие
         if ("0".equals(item.getPrice())) item.setAvailability("0");
         else item.setAvailability("+");
 
         //Изображение
-        elements = doc.select("a.colorbox.cboxElement");
+        elements = doc.select("a.colorbox");
         for (Element element : elements) {
             String image = element.attr("href").replaceAll(",", "%2C");
             item.addImage(image.startsWith("http") ? image : DOMAIN + image);
         }
+    }
+
+    @Override
+    protected void getItemPrice(Item item) {
+        Document doc = getDocument(item.getOriginURL(), 10000);
+        if (doc == null) return;
+        Elements elements;
+
+        //Цена
+        elements = doc.select("p.price.retail-price");
+        elements.select("span").remove();
+        if (elements.size() > 0)
+            item.setPrice(elements.get(0).childNode(0).toString());
+
+        //Наличие
+        if ("0".equals(item.getPrice())) item.setAvailability("0");
+        else item.setAvailability("+");
     }
 }

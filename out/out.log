@@ -120,3 +120,490 @@ Inserted: 54
 Updated: 0
 Failed: 0
 Ignored: 0
+01-25-2017 22:35:22
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: 01-25-2017 22:35:25
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+Target id: 117
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=2
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=3
+  1/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+  2/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/
+  3/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710/
+  4/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dm/
+  5/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dr/
+  6/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710/
+  7/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dmr/
+  8/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dr/
+  9/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710r/
+ 10/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rv/
+ 11/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rvz/
+ 12/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dv/
+ 13/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dvz/
+ 14/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720rvq/
+ 15/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b55-3/
+ 16/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b96-30/
+ 17/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd134p/
+ 18/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd136p/
+ 19/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd137p/
+ 20/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd2570/
+ 21/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3170/
+ 22/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3570dm/
+ 23/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3590z30/
+ 24/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670fl/
+ 25/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670m/
+ 26/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3730m/
+ 27/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640dr/
+ 28/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640ds/
+ 29/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rc/
+ 30/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv/
+ 31/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv2/
+ 32/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680/
+ 33/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drv/
+ 34/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drz/
+ 35/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dv/
+ 36/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dvz/
+ 37/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rv/
+ 38/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rvz/
+ 39/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd46c/
+ 40/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd5260/
+ 41/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd65-1/
+ 42/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd100/
+ 43/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd300/
+ 44/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd320/
+ 45/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd400/
+ 46/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd600/
+ 47/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd630/
+ 48/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n100/
+ 49/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n120/
+ 50/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n320/
+ 51/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n520/
+ 52/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n600/
+ 53/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n630/
+ 54/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n6603/
+Inserted: 0
+Updated: 54
+Failed: 0
+Ignored: 0
+01-25-2017 23:42:22
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+01-25-2017 23:43:41
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+01-25-2017 23:45:12
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dm/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dr/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dmr/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dr/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710r/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rvz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dvz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720rvq/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b55-3/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b96-30/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd134p/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd136p/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd137p/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd2570/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3170/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3570dm/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3590z30/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670fl/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670m/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3730m/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640dr/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640ds/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rc/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv2/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dvz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rvz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd46c/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd5260/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd65-1/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd100/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd300/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd320/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd400/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd600/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd630/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n100/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n120/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n320/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n520/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n600/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n630/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n6603/
+01-25-2017 23:47:02
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dm/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dr/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dmr/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dr/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710r/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rvz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dvz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720rvq/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b55-3/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/b96-30/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd134p/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd136p/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd137p/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd2570/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3170/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3570dm/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3590z30/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670fl/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670m/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3730m/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640dr/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640ds/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rc/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv2/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dvz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rv/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rvz/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd46c/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd5260/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/bd65-1/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd100/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd300/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd320/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd400/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd600/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/cd630/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n100/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n120/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n320/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n520/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n600/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n630/
+http://www.satro-paladin.com/sistemy-videonablyudeniya/n6603/
+01-25-2017 23:48:36
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+  1/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+  2/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/
+  3/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710/
+  4/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dm/
+  5/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dr/
+  6/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710/
+  7/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dmr/
+  8/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dr/
+  9/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710r/
+ 10/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rv/
+ 11/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rvz/
+ 12/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dv/
+ 13/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dvz/
+ 14/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720rvq/
+ 15/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b55-3/
+ 16/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b96-30/
+ 17/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd134p/
+ 18/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd136p/
+ 19/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd137p/
+ 20/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd2570/
+ 21/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3170/
+ 22/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3570dm/
+ 23/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3590z30/
+ 24/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670fl/
+ 25/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670m/
+ 26/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3730m/
+ 27/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640dr/
+ 28/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640ds/
+ 29/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rc/
+ 30/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv/
+ 31/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv2/
+ 32/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680/
+ 33/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drv/
+ 34/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drz/
+ 35/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dv/
+ 36/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dvz/
+ 37/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rv/
+ 38/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rvz/
+ 39/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd46c/
+ 40/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd5260/
+ 41/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd65-1/
+ 42/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd100/
+ 43/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd300/
+ 44/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd320/
+ 45/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd400/
+ 46/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd600/
+ 47/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd630/
+ 48/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n100/
+ 49/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n120/
+ 50/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n320/
+ 51/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n520/
+ 52/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n600/
+ 53/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n630/
+ 54/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n6603/
+01-26-2017 00:14:06
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: 01-26-2017 00:15:25
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+Target id: 117
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=2
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=3
+  1/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+  2/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/
+  3/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710/
+  4/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dm/
+  5/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dr/
+  6/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710/
+  7/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dmr/
+  8/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dr/
+  9/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710r/
+ 10/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rv/
+ 11/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rvz/
+ 12/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dv/
+ 13/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dvz/
+ 14/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720rvq/
+ 15/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b55-3/
+ 16/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b96-30/
+ 17/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd134p/
+ 18/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd136p/
+ 19/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd137p/
+ 20/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd2570/
+ 21/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3170/
+ 22/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3570dm/
+ 23/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3590z30/
+ 24/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670fl/
+ 25/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670m/
+ 26/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3730m/
+ 27/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640dr/
+ 28/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640ds/
+ 29/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rc/
+ 30/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv/
+ 31/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv2/
+ 32/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680/
+ 33/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drv/
+ 34/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drz/
+ 35/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dv/
+ 36/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dvz/
+ 37/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rv/
+ 38/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rvz/
+ 39/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd46c/
+ 40/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd5260/
+ 41/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd65-1/
+ 42/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd100/
+ 43/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd300/
+ 44/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd320/
+ 45/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd400/
+ 46/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd600/
+ 47/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd630/
+ 48/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n100/
+ 49/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n120/
+ 50/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n320/
+ 51/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n520/
+ 52/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n600/
+ 53/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n630/
+ 54/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n6603/
+Inserted: 54
+Updated: 0
+Failed: 0
+Ignored: 0
+01-26-2017 00:16:52
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+Target id: 117
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=2
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=3
+  1/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+  2/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/
+01-26-2017 00:19:41
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+Target id: 117
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=2
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=3
+  1/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+  2/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/
+  3/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710/
+  4/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dm/
+  5/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dr/
+  6/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710/
+  7/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dmr/
+  8/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dr/
+  9/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710r/
+ 10/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rv/
+ 11/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rvz/
+ 12/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dv/
+ 13/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dvz/
+ 14/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720rvq/
+ 15/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b55-3/
+ 16/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b96-30/
+ 17/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd134p/
+ 18/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd136p/
+ 19/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd137p/
+ 20/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd2570/
+ 21/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3170/
+ 22/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3570dm/
+ 23/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3590z30/
+ 24/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670fl/
+ 25/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670m/
+ 26/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3730m/
+ 27/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640dr/
+ 28/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640ds/
+ 29/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rc/
+ 30/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv/
+ 31/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv2/
+ 32/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680/
+ 33/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drv/
+ 34/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drz/
+ 35/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dv/
+ 36/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dvz/
+ 37/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rv/
+ 38/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rvz/
+ 39/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd46c/
+ 40/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd5260/
+ 41/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd65-1/
+ 42/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd100/
+ 43/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd300/
+ 44/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd320/
+ 45/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd400/
+ 46/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd600/
+ 47/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd630/
+ 48/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n100/
+ 49/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n120/
+ 50/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n320/
+ 51/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n520/
+ 52/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n600/
+ 53/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n630/
+ 54/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n6603/
+Inserted: 54
+Updated: 0
+Failed: 0
+Ignored: 0
+01-26-2017 00:21:52
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: www.satro-paladin.com
+  1/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+  2/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/
+  3/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710/
+  4/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dm/
+  5/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dr/
+  6/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710/
+  7/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dmr/
+  8/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710dr/
+  9/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710r/
+ 10/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rv/
+ 11/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2710rvz/
+ 12/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dv/
+ 13/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720dvz/
+ 14/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b2720rvq/
+ 15/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b55-3/
+ 16/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b96-30/
+ 17/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd134p/
+ 18/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd136p/
+ 19/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd137p/
+ 20/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd2570/
+ 21/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3170/
+ 22/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3570dm/
+ 23/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3590z30/
+ 24/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670fl/
+ 25/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3670m/
+ 26/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd3730m/
+ 27/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640dr/
+ 28/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640ds/
+ 29/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rc/
+ 30/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv/
+ 31/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4640rcv2/
+ 32/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680/
+ 33/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drv/
+ 34/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680drz/
+ 35/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dv/
+ 36/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680dvz/
+ 37/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rv/
+ 38/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd4680rvz/
+ 39/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd46c/
+ 40/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd5260/
+ 41/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/bd65-1/
+ 42/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd100/
+ 43/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd300/
+ 44/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd320/
+ 45/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd400/
+ 46/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd600/
+ 47/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/cd630/
+ 48/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n100/
+ 49/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n120/
+ 50/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n320/
+ 51/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n520/
+ 52/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n600/
+ 53/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n630/
+ 54/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/n6603/
+01-26-2017 00:25:16
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: Target id: 117
+www.satro-paladin.com
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=2
+http://www.satro-paladin.com/catalog_search.htm?action=search&type=catalog&grf_lvl2=1782&brands%5B%5D=21&page=3
+  1/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+  2/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/
+  3/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710/
+  4/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1710dm/
+01-26-2017 00:25:33
+Парсинг: -p target [lastTarget]
+Парсинг: -v vendor
+Импорт:  -w vendor [lastVendor]
+Введите параметры: Target id: 117
+www.satro-paladin.com
+  1/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b1210dm/
+  2/ 54 http://www.satro-paladin.com/sistemy-videonablyudeniya/b12c/

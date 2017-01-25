@@ -32,13 +32,24 @@ class Parser {
             statement = connection.createStatement();
             if (args.length == 0) args = getArgs();
 
+            //TODO: Переделать
+            int firstTarget;
+            int lastTarget;
             switch (args[0].substring(0, 2)) {
                 case "-p":
-                    int firstTarget = Integer.parseInt(args[1]);
-                    int lastTarget = firstTarget;
+                    firstTarget = Integer.parseInt(args[1]);
+                    lastTarget = firstTarget;
                     if (args.length > 2) lastTarget = Integer.parseInt(args[2]);
                     //****//
                     parseTargets(firstTarget, lastTarget);
+                    //****//
+                    break;
+                case "-P":
+                    firstTarget = Integer.parseInt(args[1]);
+                    lastTarget = firstTarget;
+                    if (args.length > 2) lastTarget = Integer.parseInt(args[2]);
+                    //****//
+                    parsePrices(firstTarget, lastTarget);
                     //****//
                     break;
                 case "-v":
@@ -48,8 +59,8 @@ class Parser {
                 case "-w":
                     int firstVendor = Integer.parseInt(args[1]);
                     int lastVendor = firstVendor;
-                    Exporter exporter = new Exporter();
                     if (args.length > 2) lastVendor = Integer.parseInt(args[2]);
+                    Exporter exporter = new Exporter();
                     if (args[0].length() == 2 || "a".equals(args[0].substring(2, 3))) {
                         exporter.write(0, firstVendor, lastVendor);
                         exporter.write(1, firstVendor, lastVendor);
@@ -63,8 +74,8 @@ class Parser {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try { connection.close(); } catch(SQLException ignored) { }
-            try { statement.close(); } catch(SQLException ignored) { }
+            try { connection.close(); } catch(SQLException ignored) {}
+            try { statement.close(); } catch(SQLException ignored) {}
         }
     }
 
@@ -88,50 +99,68 @@ class Parser {
         return args;
     }
 
-    private static void parseTargets(int[] targets) {
-        String query = null;
+    private static Target getTarget(int targetId) {
+        System.out.println("Target id: " + targetId);
+        String query = String.format("CALL getTargetById(%d);", targetId);
+        ResultSet resultSet = null;
+        Target target = null;
         try {
-            ResultSet resultSet;
-            Shop shop;
-            for (int targetId : targets) {
-                query = String.format("CALL getTargetById(%d);", targetId);
-                resultSet = statement.executeQuery(query);
-                resultSet.next();
-                Target target = new Target(
-                        targetId,
-                        resultSet.getInt("cat_id"),
-                        resultSet.getInt("last_id"),
-                        resultSet.getInt("vend_id"),
-                        resultSet.getString("currency"),
-                        resultSet.getString("unit"),
-                        resultSet.getString("url"),
-                        resultSet.getString("vend_name"));
-
-                String URI = resultSet.getString("url");
-                String domain = URI.substring(7, URI.indexOf('/', 7));
-                System.out.println(domain);
-                switch (domain) {
-                    case "sec-s.ru":
-                        shop = new LiderSB();
-                        break;
-                    case "www.tinko.ru":
-                        shop = new Tinko();
-                        break;
-                    case "shop.nag.ru":
-                        shop = new Nag();
-                        break;
-                    case "www.satro-paladin.com":
-                        shop = new SatroPaladin();
-                        break;
-                    default:
-                        System.out.printf("Wrong target domain: %s id: %d\r\n", domain, targetId);
-                        continue;
-                }
-                shop.parseItemByTarget(target, false, false);
-            }
+            resultSet = statement.executeQuery(query);
+            resultSet.next();
+            target = new Target(
+                    targetId,
+                    resultSet.getInt("cat_id"),
+                    resultSet.getInt("last_id"),
+                    resultSet.getInt("vend_id"),
+                    resultSet.getString("currency"),
+                    resultSet.getString("unit"),
+                    resultSet.getString("url"),
+                    resultSet.getString("vend_name")
+            );
         } catch (SQLException e) {
             System.out.println(query);
             e.printStackTrace();
+        } finally {
+            if (resultSet != null) try { resultSet.close(); } catch(SQLException ignored) {}
+        }
+        return target;
+    }
+
+    private static Shop getShop(String url) {
+        String domain = url.substring(7, url.indexOf('/', 7));
+        System.out.println(domain);
+        Shop shop = null;
+        switch (domain) {
+            case "sec-s.ru":
+                shop = new LiderSB();
+                break;
+            case "www.tinko.ru":
+                shop = new Tinko();
+                break;
+            case "shop.nag.ru":
+                shop = new Nag();
+                break;
+            case "www.satro-paladin.com":
+                shop = new SatroPaladin();
+                break;
+            default:
+                System.out.println("Wrong target domain: " + domain);
+        }
+        return shop;
+    }
+
+    private static void parseTargets(int... targets) {
+        Target target;
+        Shop shop;
+        for (int targetId : targets) {
+            target = getTarget(targetId);
+            shop = getShop(target.getUrl());
+            if (shop == null) continue;
+            try {
+                shop.parseItems(target, false, false);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -142,8 +171,26 @@ class Parser {
         parseTargets(targets);
     }
 
-    private static void parseTargets(int target) {
-        parseTargets(new int[]{target});
+    private static void parsePrices(int... targets) {
+        Target target;
+        Shop shop;
+        for (int targetId : targets) {
+            target = getTarget(targetId);
+            shop = getShop(target.getUrl());
+            if (shop == null) continue;
+            try {
+                shop.parsePricesByTarget(target);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void parsePrices(int firstTarget, int lastTarget) {
+        int[] targets = new int[lastTarget - firstTarget + 1];
+        for (int index = 0; index < targets.length; index++)
+            targets[index] = firstTarget + index;
+        parsePrices(targets);
     }
 
     private static void parseVendor(int vendor) {

@@ -62,6 +62,7 @@ class Nag extends Shop {
         return data;
     }
 
+    @Override
     protected LinkedList<String> getItemsURI(String uri) {
         LinkedList<String> links = new LinkedList<>();
         if (!uri.endsWith("?count=0")) uri += "?count=0";
@@ -128,5 +129,9 @@ class Nag extends Shop {
         return data;
     }
 
-    protected void getItemData(Item item) { }
+    @Override
+    protected void getItemData(Item item) {}
+
+    @Override
+    protected void getItemPrice(Item item) {}
 }

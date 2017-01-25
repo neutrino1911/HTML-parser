@@ -9,6 +9,7 @@ import java.util.LinkedList;
 class Tinko extends Shop {
     private static final String DOMAIN = "http://www.tinko.ru";
 
+    @Override
     protected LinkedList<String> getItemsURI(String uri) {
         LinkedList<String> links = new LinkedList<>();
         Document doc;
@@ -26,6 +27,7 @@ class Tinko extends Shop {
         return links;
     }
 
+    @Override
     protected void getItemData(Item item) {
         Document doc = getDocument(item.getOriginURL(), 10000);
         if (doc == null) return;
@@ -34,7 +36,7 @@ class Tinko extends Shop {
         //Название
         elements = doc.select("div.breadcrumbs h1");
         if (elements.size() > 0)
-            item.setName(elements.get(0).childNode(0).toString().trim());
+            item.setName(elements.get(0).childNode(0).toString());
 
         //Описание
         elements = doc.select("div.product-shop__short-description > div");
@@ -79,5 +81,21 @@ class Tinko extends Shop {
             String image = element.attr("href").replaceAll(",", "%2C");
             item.addImage(image.startsWith("http") ? image : DOMAIN + image);
         }
+    }
+
+    @Override
+    protected void getItemPrice(Item item) {
+        Document doc = getDocument(item.getOriginURL(), 10000);
+        if (doc == null) return;
+        Elements elements;
+
+        //Цена
+        elements = doc.select("div.price-box > div.min > p");
+        if (elements.size() > 0)
+            item.setPrice(elements.get(0).childNode(0).toString());
+
+        //Наличие
+        if ("0".equals(item.getPrice())) item.setAvailability("0");
+        else item.setAvailability("+");
     }
 }

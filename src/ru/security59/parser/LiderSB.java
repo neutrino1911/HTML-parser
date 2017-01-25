@@ -9,6 +9,7 @@ import java.util.LinkedList;
 class LiderSB extends Shop {
     private static final String DOMAIN = "http://sec-s.ru";
 
+    @Override
     protected LinkedList<String> getItemsURI(String uri) {
         LinkedList<String> links = new LinkedList<>();
         Document doc = getDocument(uri);
@@ -20,6 +21,7 @@ class LiderSB extends Shop {
         return links;
     }
 
+    @Override
     protected void getItemData(Item item) {
         Document doc = getDocument(item.getOriginURL());
         if (doc == null) return;
@@ -28,7 +30,7 @@ class LiderSB extends Shop {
         //Название
         elements = doc.select("div.h1-wr.h1-shop > h1");
         if (elements.size() > 0)
-            item.setName(elements.get(0).childNode(0).toString().trim());
+            item.setName(elements.get(0).childNode(0).toString());
 
         //Описание
         elements = doc.select("div.shop2-product-desc div.block-tov-body");
@@ -56,5 +58,21 @@ class LiderSB extends Shop {
             String image = element.attr("href").replaceAll(",", "%2C");
             item.addImage(image.startsWith("http") ? image : DOMAIN + image);
         }
+    }
+
+    @Override
+    protected void getItemPrice(Item item) {
+        Document doc = getDocument(item.getOriginURL());
+        if (doc == null) return;
+        Elements elements;
+
+        //Цена
+        elements = doc.select("div.price-product-fix > span");
+        if (elements.size() > 0)
+            item.setPrice(elements.get(0).childNode(0).toString());
+
+        //Наличие
+        if ("0".equals(item.getPrice())) item.setAvailability("0");
+        else item.setAvailability("+");
     }
 }

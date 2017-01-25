@@ -21,7 +21,7 @@ abstract class Shop {
     private boolean loadImages;
     private boolean simulation;
 
-    void parseItemByTarget(Target target, boolean loadImages, boolean simulation) throws SQLException {
+    void parseItems(Target target, boolean loadImages, boolean simulation) throws SQLException {
         this.loadImages = loadImages;
         this.simulation = simulation;
         String query;
@@ -29,7 +29,6 @@ abstract class Shop {
         if (!simulation) updateLaunchTime(target.getId());
 
         //Получаем ссылки на все товары категории
-        System.out.printf("%d ", target.getId());
         LinkedList<String> links = getItemsURI(target.getUrl());
         int currentItemIndex = 1;
 
@@ -76,7 +75,7 @@ abstract class Shop {
                 if (!simulation) executeUpdate(item.getInsertQuery());
                 insertCount++;
             }
-            if (loadImages) addImages(item);
+            addImages(item);
             try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
         }
 
@@ -91,40 +90,38 @@ abstract class Shop {
         );
     }
 
-    void parseItemByTarget(Target target) throws SQLException {
-        parseItemByTarget(target, true, false);
-    }
-
-    void parsePriceByTarget(int targetId) throws SQLException {
+    void parsePricesByTarget(Target target) throws SQLException {
+        String query;
         //Обновляем время запуска
-        /*if (!simulation) updateLaunchTime(targetId);
-
-        if (executeQuery("CALL getTarget(" + targetId + ");") != 0) return;*/
-        /*String query = null;
-        //Обновляем время запуска
-        if (!simulation) updateLaunchTime(targetId);
-        try {
-            query = "CALL getPriceTarget(" + targetId +");";
-            resultSet = statement.executeQuery(query);
-        } catch (SQLException e) {
-            System.out.println(query);
-            e.printStackTrace();
-            return;
+        if (!simulation) updateLaunchTime(target.getId());
+        int minItemId = target.getVendorId() * 1000000 + target.getCategoryId() * 1000;
+        int maxItemId = minItemId + 999;
+        query = String.format("CALL getShortProd(%d, %d);", minItemId, maxItemId);
+        executeQuery(query);
+        LinkedList<Item> items = new LinkedList<>();
+        while (resultSet.next()) {
+            items.add(new Item(
+                    resultSet.getInt("prod_id"),
+                    resultSet.getString("price"),
+                    resultSet.getString("availability"),
+                    resultSet.getString("origin_url")
+            ));
         }
-
-        resultSet.next();
-        int vendId = resultSet.getInt("vend_id");
-        String vendName = resultSet.getString("vend_name");
-
-        LinkedList<String> links = getItemsURI(resultSet.getString("url"));*/
+        int currentItemIndex = 1;
+        for (Item item : items) {
+            System.out.printf("%3d/%3d ", currentItemIndex++, items.size());
+            getItemPrice(item);
+            query = String.format("UPDATE Products SET price = %s, availability = '%s' WHERE prod_id = %d;",
+                    item.getPrice(),
+                    item.getAvailability(),
+                    item.getId()
+            );
+            executeUpdate(query);
+            try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
+        }
     }
 
-    void parsePriceByVendor(int vendorId) throws SQLException {
-        String query = String.format("SELECT prod_id, prod_name, origin_url FROM Products WHERE vend_id = %d;", vendorId);
-        if (executeQuery(query) != 0) return;
-
-
-    }
+    void parsePricesByVendor(int vendorId) throws SQLException {}
 
     private int executeQuery(String query) throws SQLException {
         int returnCode = 0;
@@ -170,6 +167,7 @@ abstract class Shop {
     }
 
     protected abstract void getItemData(Item item);
+    protected abstract void getItemPrice(Item item);
 
     protected abstract LinkedList<String> getItemsURI(String URI);
 
