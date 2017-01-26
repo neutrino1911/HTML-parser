@@ -63,26 +63,6 @@ class HTMLParser {
         }
     }
 
-    private static String[] getArgs() {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String[] args = new String[0];
-        try {
-            System.out.println("Парсинг: -p target [lastTarget]");
-            System.out.println("Парсинг: -v vendor");
-            System.out.println("Импорт:  -w vendor [lastVendor]");
-            System.out.print("Введите параметры: ");
-            while (args.length == 0) {
-                while (reader.ready())
-                    args = reader.readLine().split(" ");
-                Thread.sleep(100);
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        try {reader.close();} catch (IOException ignored) {}
-        return args;
-    }
-
     private static Target getTarget(int targetId) {
         System.out.println("Target id: " + targetId);
         String query = String.format("CALL getTargetById(%d);", targetId);

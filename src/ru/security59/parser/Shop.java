@@ -16,7 +16,7 @@ import java.util.LinkedList;
 import static ru.security59.parser.HTMLParser.statement;
 
 abstract class Shop {
-    private static final String LINUX_PATH = /*"c:/parser/";/*/"/home/neutrino/share/parser/";
+    private static final String LINUX_PATH = "/home/neutrino/share/parser/";
     private ResultSet resultSet;
     private boolean loadImages;
     private boolean simulation;
