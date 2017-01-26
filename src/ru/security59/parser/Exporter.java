@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
-import static ru.security59.parser.Parser.statement;
+import static ru.security59.parser.HTMLParser.statement;
 
 class Exporter {
 
@@ -152,8 +152,8 @@ class Exporter {
 
     private void writeXLS() {
         if (!checkDirectory()) return;
-        //String filename = PATH + "tiuImport.xls";
-        String filename = "/home/neutrino/import.xls";
+        String filename = PATH + "tiuImport.xls";
+        //String filename = "/home/neutrino/import.xls";
         FileOutputStream out;
         try {
             out = new FileOutputStream(filename);

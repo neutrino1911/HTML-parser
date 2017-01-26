@@ -1,12 +1,15 @@
 package ru.security59.parser;
 
+import org.apache.commons.cli.*;
+
 import java.io.*;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
-class Parser {
+class HTMLParser {
     private static final String url = "jdbc:mysql://urgant/parser?useUnicode=true&characterEncoding=utf-8&useSSL=false";
     private static final String user = "script";
     private static final String password = "YLO617hxs662";
@@ -26,51 +29,32 @@ class Parser {
         DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
         System.out.println(dateFormat.format(new Date()));
 
+        Options options = new Options();
+        options.addOption("t", "target", false, "Parse items by target");
+        //options.addOption("u", "update", false, "Update items. Use only with -t");
+        options.addOption("p", "prices", false, "Parse prices by target");
+        options.addOption("e", "export", true, "Write export by vendor");
+        options.addOption("vendor", false, "Parse items by vendor");
+
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd;
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return;
+        }
+
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(url, user, password);
             statement = connection.createStatement();
-            if (args.length == 0) args = getArgs();
 
-            //TODO: Переделать
-            int firstTarget;
-            int lastTarget;
-            switch (args[0].substring(0, 2)) {
-                case "-p":
-                    firstTarget = Integer.parseInt(args[1]);
-                    lastTarget = firstTarget;
-                    if (args.length > 2) lastTarget = Integer.parseInt(args[2]);
-                    //****//
-                    parseTargets(firstTarget, lastTarget);
-                    //****//
-                    break;
-                case "-P":
-                    firstTarget = Integer.parseInt(args[1]);
-                    lastTarget = firstTarget;
-                    if (args.length > 2) lastTarget = Integer.parseInt(args[2]);
-                    //****//
-                    parsePrices(firstTarget, lastTarget);
-                    //****//
-                    break;
-                case "-v":
-                    int vendor = Integer.parseInt(args[1]);
-                    parseVendor(vendor);
-                    break;
-                case "-w":
-                    int firstVendor = Integer.parseInt(args[1]);
-                    int lastVendor = firstVendor;
-                    if (args.length > 2) lastVendor = Integer.parseInt(args[2]);
-                    Exporter exporter = new Exporter();
-                    if (args[0].length() == 2 || "a".equals(args[0].substring(2, 3))) {
-                        exporter.write(0, firstVendor, lastVendor);
-                        exporter.write(1, firstVendor, lastVendor);
-                    }
-                    else if ("t".equals(args[0].substring(2, 3)))
-                        exporter.write(0, firstVendor, lastVendor);
-                    else if ("u".equals(args[0].substring(2, 3)))
-                        exporter.write(1, firstVendor, lastVendor);
-                    break;
-            }
+            if (cmd.hasOption("e")) export(cmd);
+            else if (cmd.hasOption("p")) parsePrices(cmd);
+            else if (cmd.hasOption("t")) parseTargets(cmd);
+            else if (cmd.hasOption("vendor") && cmd.getArgList().size() > 0)
+                parseVendor(Integer.parseInt(cmd.getArgList().get(0)));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -149,6 +133,33 @@ class Parser {
         return shop;
     }
 
+    private static void export(CommandLine cmd) {
+        List<String> arguments = cmd.getArgList();
+        if (arguments.size() == 0) {
+            System.out.println("Need more parameters");
+            return;
+        }
+        int firstVendor;
+        int lastVendor;
+        firstVendor = Integer.parseInt(arguments.get(0));
+        if (arguments.size() > 1) lastVendor = Integer.parseInt(arguments.get(1));
+        else lastVendor = firstVendor;
+        Exporter exporter = new Exporter();
+        switch (cmd.getOptionValue("e")) {
+            case "a":
+                exporter.write(0, firstVendor, lastVendor);
+                exporter.write(1, firstVendor, lastVendor);
+                break;
+            case "t":
+                exporter.write(0, firstVendor, lastVendor);
+                break;
+            case "u":
+                exporter.write(1, firstVendor, lastVendor);
+            default:
+                System.out.println("Wrong export parameter");
+        }
+    }
+
     private static void parseTargets(int... targets) {
         Target target;
         Shop shop;
@@ -171,6 +182,16 @@ class Parser {
         parseTargets(targets);
     }
 
+    private static void parseTargets(CommandLine cmd) {
+        List<String> arguments = cmd.getArgList();
+        int firstTarget;
+        int lastTarget;
+        firstTarget = Integer.parseInt(arguments.get(0));
+        if (arguments.size() > 1) lastTarget = Integer.parseInt(arguments.get(1));
+        else lastTarget = firstTarget;
+        parseTargets(firstTarget, lastTarget);
+    }
+
     private static void parsePrices(int... targets) {
         Target target;
         Shop shop;
@@ -191,6 +212,16 @@ class Parser {
         for (int index = 0; index < targets.length; index++)
             targets[index] = firstTarget + index;
         parsePrices(targets);
+    }
+
+    private static void parsePrices(CommandLine cmd) {
+        List<String> arguments = cmd.getArgList();
+        int firstTarget;
+        int lastTarget;
+        firstTarget = Integer.parseInt(arguments.get(0));
+        if (arguments.size() > 1) lastTarget = Integer.parseInt(arguments.get(1));
+        else lastTarget = firstTarget;
+        parsePrices(firstTarget, lastTarget);
     }
 
     private static void parseVendor(int vendor) {

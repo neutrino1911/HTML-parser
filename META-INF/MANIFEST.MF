@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 Class-Path: ./
-Main-Class: ru.security59.parser.Parser
+Main-Class: ru.security59.parser.HTMLParser
 
