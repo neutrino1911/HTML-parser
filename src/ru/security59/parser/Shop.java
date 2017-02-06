@@ -4,27 +4,23 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
 import static ru.security59.parser.HTMLParser.statement;
+import static ru.security59.parser.HTMLParser.export_path;
 
 abstract class Shop {
-    private static final String LINUX_PATH = "/home/neutrino/share/parser/";
-    private ResultSet resultSet;
-    private boolean loadImages;
-    private boolean simulation;
+    private static final String LINUX_PATH = export_path;
+    ResultSet resultSet;
+    boolean loadImages;
+    boolean simulation;
 
     void parseItems(Target target, boolean loadImages, boolean simulation) throws SQLException {
         this.loadImages = loadImages;
         this.simulation = simulation;
-        String query;
         //Обновляем время запуска
         if (!simulation) updateLaunchTime(target.getId());
 
@@ -38,6 +34,7 @@ abstract class Shop {
 
         //Проходим по всем ссылкам
         for (String link : links) {
+            String query;
             System.out.printf("%3d/%3d ", currentItemIndex++, links.size());
             Item item = new Item(
                     target.getCategoryId(),
@@ -123,7 +120,7 @@ abstract class Shop {
 
     void parsePricesByVendor(int vendorId) throws SQLException {}
 
-    private int executeQuery(String query) throws SQLException {
+    int executeQuery(String query) throws SQLException {
         int returnCode = 0;
         try {
             resultSet = statement.executeQuery(query);
@@ -135,7 +132,7 @@ abstract class Shop {
         return returnCode;
     }
 
-    private int executeUpdate(String query) throws SQLException {
+    int executeUpdate(String query) throws SQLException {
         int returnCode;
         try {
             returnCode = statement.executeUpdate(query);
@@ -147,7 +144,7 @@ abstract class Shop {
         return returnCode;
     }
 
-    private void updateLaunchTime(int targetId) {
+    void updateLaunchTime(int targetId) {
         String query = null;
         try {
             query = "SELECT last_use FROM Targets WHERE id=" + targetId + " AND first_use!=NULL;";
@@ -171,9 +168,14 @@ abstract class Shop {
 
     protected abstract LinkedList<String> getItemsURI(String URI);
 
-    private void addImages(Item item) throws SQLException {
+    void addImages(Item item) throws SQLException {
+        int index = 0;
         for (String image : item.getImages()) {
-            String imageName = item.getSeoURL() + "-" + item.getImages().indexOf(image) + ".png";
+            String imageName = String.format("%s-%d%s",
+                    item.getSeoURL(),
+                    index++,
+                    image.substring(image.lastIndexOf('.'))
+            );
             if (loadImages && !isImageExists(imageName)) getImage(image, imageName);
             String query = String.format(
                     "SELECT item_id, image_name FROM Images WHERE item_id = %d AND image_name = '%s';",
@@ -194,6 +196,7 @@ abstract class Shop {
 
     private void getImage(String URI, String name) {
         System.out.printf("        %s\r\n", URI);
+        String newName = name.substring(0, name.lastIndexOf('.')) + ".jpg";
         File file = new File(LINUX_PATH);
         if (!file.exists())
             if (file.mkdir()) System.out.println("Directory " + file + " is created!");
@@ -202,27 +205,13 @@ abstract class Shop {
         if (!file.exists())
             if (file.mkdir()) System.out.println("Directory " + file + " is created!");
             else System.out.println("Failed to create " + file + " directory!");
-        BufferedImage image;
-        URL URL;
-        try {
-            URL = new URL(URI);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return;
-        }
-        try {
-            image = ImageIO.read(URL);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-        try {
-            ImageIO.write(image, "png", new File(LINUX_PATH + "new/" + name));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        try {//wget URI -O outfile
+            Process wget = new ProcessBuilder("wget", URI, "-O", LINUX_PATH + "new/" + name).start();
+            wget.waitFor();
+            Thread.sleep(500);
+        } catch (Exception e) {e.printStackTrace();}
         try {//convert infile.png -resize '500x500>' -gravity Center -extent '500x500' outfile.jpg
-            new ProcessBuilder("convert",
+            Process convert = new ProcessBuilder("convert",
                     LINUX_PATH + "new/" + name,
                     "-resize",
                     "500x500>",
@@ -230,15 +219,14 @@ abstract class Shop {
                     "Center",
                     "-extent",
                     "500x500",
-                    LINUX_PATH + "img/" + name.replace(".png", ".jpg")).start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                    LINUX_PATH + "img/" + newName).start();
+            convert.waitFor();
+            Thread.sleep(100);
+        } catch (Exception e) {e.printStackTrace();}
     }
 
     private boolean isImageExists(String imageName) {
-        File file = new File(LINUX_PATH + "new/" + imageName);
-        return file.exists();
+        return new File(LINUX_PATH + "new/" + imageName).exists();
     }
 
     Document getDocument(String uri, int timeout) {

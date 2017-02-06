@@ -1,6 +1,6 @@
 package ru.security59.parser;
 
-import java.util.LinkedList;
+import java.util.HashSet;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
@@ -11,8 +11,9 @@ class Item {
     private String availability;
     private String currency;
     private String description;
-    private LinkedList<String> images;
+    private HashSet<String> images;
     private String name;
+    private String originId;
     private String originURL;
     private String price;
     private String seoURL;
@@ -26,7 +27,7 @@ class Item {
         this.originURL = originURL;
         this.unit = unit;
         this.vendorName = vendorName;
-        images = new LinkedList<>();
+        images = new HashSet<>();
     }
 
     Item(int id, String price, String availability, String originUrl) {
@@ -85,7 +86,7 @@ class Item {
     }
 
     void setCurrency(String currency) {
-        this.currency = currency;
+        this.currency = currency.trim();
     }
 
     String getDescription() {
@@ -96,7 +97,7 @@ class Item {
         this.description = escapeHtml4(description.trim());
     }
 
-    LinkedList<String> getImages() {
+    HashSet<String> getImages() {
         return images;
     }
 
@@ -114,6 +115,14 @@ class Item {
 
         seoURL = Transliterator.cyr2lat(this.name.toLowerCase());
         seoURL = seoURL.replaceAll("\\W", "-").replaceAll("-+", "-").replaceAll("-$", "");
+    }
+
+    String getOriginId() {
+        return originId;
+    }
+
+    void setOriginId(String originId) {
+        this.originId = originId;
     }
 
     String getOriginURL() {
@@ -150,9 +159,9 @@ class Item {
 
     String getInsertQuery() {
         String queryTables = "prod_id, prod_name, price, currency, unit, cat_id, " +
-                "vend_id, prod_desc, availability, seo_url, origin_url";
+                "vend_id, prod_desc, availability, seo_url, origin_url, origin_id";
 
-        String queryValues = String.format("%d, '%s', %s, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s'",
+        String queryValues = String.format("%d, '%s', %s, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', %s",
                 id,
                 name,
                 price,
@@ -163,7 +172,9 @@ class Item {
                 description,
                 availability,
                 seoURL,
-                originURL);
+                originURL,
+                originId
+                );
 
         return String.format("INSERT INTO Products (%s) VALUES (%s);", queryTables, queryValues);
     }
@@ -209,6 +220,9 @@ class Item {
         query.append(", origin_url = '");
         query.append(originURL);
         query.append("'");
+
+        query.append(", origin_id = ");
+        query.append(originId);
 
         query.append(" WHERE prod_id = ");
         query.append(id);

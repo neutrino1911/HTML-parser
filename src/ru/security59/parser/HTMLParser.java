@@ -6,28 +6,22 @@ import java.io.*;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
 
 class HTMLParser {
-    private static final String url = "jdbc:mysql://urgant/parser?useUnicode=true&characterEncoding=utf-8&useSSL=false";
-    private static final String user = "script";
-    private static final String password = "YLO617hxs662";
+    private static String db_url;
+    private static String db_user;
+    private static String db_pass;
+    static String export_path;
 
     private static Connection connection;
     static Statement statement;
 
     public static void main(String[] args) throws FileNotFoundException {
-        PrintStream out = new PrintStream(new FileOutputStream("out/out.log", true));
-        PrintStream dual = new DualStream(System.out, out);
-        System.setOut(dual);
-
-        PrintStream err = new PrintStream(new FileOutputStream("out/err.log", true));
-        dual= new DualStream(System.err, err);
-        System.setErr(dual);
-
-        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
-        System.out.println(dateFormat.format(new Date()));
+        initLog();
+        boolean isConfigLoaded = initConfig();
+        if (!isConfigLoaded) return;
 
         Options options = new Options();
         options.addOption("t", "target", false, "Parse items by target");
@@ -47,7 +41,7 @@ class HTMLParser {
 
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(url, user, password);
+            connection = DriverManager.getConnection(db_url, db_user, db_pass);
             statement = connection.createStatement();
 
             if (cmd.hasOption("e")) export(cmd);
@@ -91,7 +85,8 @@ class HTMLParser {
     }
 
     private static Shop getShop(String url) {
-        String domain = url.substring(7, url.indexOf('/', 7));
+        int index = url.indexOf('/') + 2;
+        String domain = url.substring(index, url.indexOf('/', index));
         System.out.println(domain);
         Shop shop = null;
         switch (domain) {
@@ -106,6 +101,9 @@ class HTMLParser {
                 break;
             case "www.satro-paladin.com":
                 shop = new SatroPaladin();
+                break;
+            case "bronegilet.ru":
+                shop = new Avangard();
                 break;
             default:
                 System.out.println("Wrong target domain: " + domain);
@@ -148,7 +146,7 @@ class HTMLParser {
             shop = getShop(target.getUrl());
             if (shop == null) continue;
             try {
-                shop.parseItems(target, false, false);
+                shop.parseItems(target, true, false);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -225,5 +223,37 @@ class HTMLParser {
             e.printStackTrace();
         }
         if (targets != null) parseTargets(targets);
+    }
+
+    private static void initLog() throws FileNotFoundException {
+        PrintStream out = new PrintStream(new FileOutputStream("out/out.log", true));
+        PrintStream dual = new DualStream(System.out, out);
+        System.setOut(dual);
+
+        PrintStream err = new PrintStream(new FileOutputStream("out/err.log", true));
+        dual= new DualStream(System.err, err);
+        System.setErr(dual);
+
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
+        System.out.println(dateFormat.format(new Date()));
+    }
+
+    private static boolean initConfig() {
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream("config.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        db_user = properties.getProperty("db_user");
+        db_pass = properties.getProperty("db_pass");
+        db_url = String.format(
+                "jdbc:mysql://%s:%s/parser?useUnicode=true&characterEncoding=utf-8&useSSL=false",
+                properties.getProperty("db_host"),
+                properties.getProperty("db_port")
+        );
+        export_path = properties.getProperty("export_path");
+        return true;
     }
 }
