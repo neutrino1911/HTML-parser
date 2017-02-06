@@ -3,6 +3,7 @@ package ru.security59.parser;
 import java.util.HashSet;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
+import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 class Item {
     private int id;
@@ -38,7 +39,7 @@ class Item {
     }
 
     void addImage(String image) {
-        images.add(image);
+        if (images.size() < 10) images.add(image);
     }
 
     String getAvailability() {
@@ -113,7 +114,7 @@ class Item {
         this.name = escapeHtml4(name.trim());
         if (addVendor) addVendorToName();
 
-        seoURL = Transliterator.cyr2lat(this.name.toLowerCase());
+        seoURL = Transliterator.cyr2lat(unescapeHtml4(this.name.toLowerCase()));
         seoURL = seoURL.replaceAll("\\W", "-").replaceAll("-+", "-").replaceAll("-$", "");
     }
 

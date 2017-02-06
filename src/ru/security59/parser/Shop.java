@@ -176,7 +176,7 @@ abstract class Shop {
                     index++,
                     image.substring(image.lastIndexOf('.'))
             );
-            if (loadImages && !isImageExists(imageName)) getImage(image, imageName);
+            if (loadImages) getImage(image, imageName);
             String query = String.format(
                     "SELECT item_id, image_name FROM Images WHERE item_id = %d AND image_name = '%s';",
                     item.getId(),
@@ -195,9 +195,14 @@ abstract class Shop {
     }
 
     private void getImage(String URI, String name) {
-        System.out.printf("        %s\r\n", URI);
+        System.out.printf("        %s ", URI);
         String newName = name.substring(0, name.lastIndexOf('.')) + ".jpg";
-        File file = new File(LINUX_PATH);
+        File file = new File(LINUX_PATH + "img/" + newName);
+        if (file.exists()) {
+            System.out.println("exists");
+            return;
+        }
+        file = new File(LINUX_PATH);
         if (!file.exists())
             if (file.mkdir()) System.out.println("Directory " + file + " is created!");
             else System.out.println("Failed to create " + file + " directory!");
@@ -205,11 +210,18 @@ abstract class Shop {
         if (!file.exists())
             if (file.mkdir()) System.out.println("Directory " + file + " is created!");
             else System.out.println("Failed to create " + file + " directory!");
-        try {//wget URI -O outfile
-            Process wget = new ProcessBuilder("wget", URI, "-O", LINUX_PATH + "new/" + name).start();
-            wget.waitFor();
-            Thread.sleep(500);
-        } catch (Exception e) {e.printStackTrace();}
+        file = new File(LINUX_PATH + "new/" + name);
+        if (!file.exists()) {
+            try {//wget URI -O outfile
+                Process wget = new ProcessBuilder("wget", URI, "-O", LINUX_PATH + "new/" + name).start();
+                wget.waitFor();
+                Thread.sleep(100);
+            } catch (Exception e) {
+                System.out.println("error");
+                e.printStackTrace();
+            }
+        }
+
         try {//convert infile.png -resize '500x500>' -gravity Center -extent '500x500' outfile.jpg
             Process convert = new ProcessBuilder("convert",
                     LINUX_PATH + "new/" + name,
@@ -222,11 +234,11 @@ abstract class Shop {
                     LINUX_PATH + "img/" + newName).start();
             convert.waitFor();
             Thread.sleep(100);
-        } catch (Exception e) {e.printStackTrace();}
-    }
-
-    private boolean isImageExists(String imageName) {
-        return new File(LINUX_PATH + "new/" + imageName).exists();
+        } catch (Exception e) {
+            System.out.println("error");
+            e.printStackTrace();
+        }
+        System.out.println("ok");
     }
 
     Document getDocument(String uri, int timeout) {

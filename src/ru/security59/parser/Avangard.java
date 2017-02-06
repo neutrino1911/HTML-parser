@@ -10,7 +10,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.LinkedList;
+
+import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 public class Avangard extends Shop {
 
@@ -28,19 +31,21 @@ public class Avangard extends Shop {
             String url = target.getUrl();
             InputStream in = new URL(url).openStream();
             document = builder.parse(in);
-            //document = builder.parse("security59.xml");
         } catch (Exception e) {
             e.printStackTrace();
         }
         if (document == null) return;
         document.getDocumentElement().normalize();
+        System.out.println(document.getElementsByTagName("picture").getLength());
         NodeList list = document.getElementsByTagName("offer");
 
         int insertCount = 0;
         int updateCount = 0;
         int failedCount = 0;
 
+        HashSet<String> items = new HashSet<>();
         Item item = null;
+
         for (int index = 0; index < list.getLength(); index++) {
             Node node = list.item(index);
             System.out.printf(
@@ -51,8 +56,10 @@ public class Avangard extends Shop {
             );
             if (node.getNodeType() != Node.ELEMENT_NODE) continue;
             Element element = (Element) node;
-            String name = element.getElementsByTagName("name").item(0).getTextContent();
-            if (item == null || !name.equals(item.getName())) {//Если новый элемент
+            String name = unescapeHtml4(element.getElementsByTagName("name").item(0).getTextContent());
+            if (!items.contains(name)) {//Если новый элемент
+                items.add(name);
+                if (index > 0) addImages(item);
                 item = new Item(
                         0,
                         target.getVendorId(),
@@ -70,7 +77,7 @@ public class Avangard extends Shop {
                 item.setDescription("");
                 for (int i = 0; i < element.getElementsByTagName("picture").getLength(); i++)
                     item.addImage(element.getElementsByTagName("picture").item(i).getTextContent());
-                executeQuery("SELECT prod_id FROM Products WHERE origin_id = " + item.getOriginId() + ";");
+                executeQuery("SELECT prod_id FROM Products WHERE prod_name = '" + item.getName() + "';");
                 if (!resultSet.next()) {
                     item.setId(target.getNextId());
                     if (!simulation) executeUpdate(item.getInsertQuery());
@@ -86,9 +93,8 @@ public class Avangard extends Shop {
                 for (int i = 0; i < element.getElementsByTagName("picture").getLength(); i++)
                     item.addImage(element.getElementsByTagName("picture").item(i).getTextContent());
             }
-            addImages(item);
         }
-
+        addImages(item);
         System.out.printf("Inserted: %d\nUpdated: %d\nFailed: %d\nIgnored: %d\n",
                 insertCount,
                 updateCount,
