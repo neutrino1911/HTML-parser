@@ -15,7 +15,7 @@ import java.util.LinkedList;
 
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
-public class Avangard extends Shop {
+class Avangard extends Shop {
 
     @Override
     void parseItems(Target target, boolean loadImages, boolean simulation) throws SQLException {

@@ -1,5 +1,7 @@
 package ru.security59.parser;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.HashSet;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;

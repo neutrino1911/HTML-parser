@@ -16,8 +16,8 @@ import static ru.security59.parser.HTMLParser.statement;
 
 class Exporter {
 
-    private static final String LINUX_PATH = "/home/neutrino/share/parser/";
-    private static final String WIN_PATH = "C:/parser/";
+    private static final String LINUX_PATH = "/home/neutrino/share/ru.security59.parser/";
+    private static final String WIN_PATH = "C:/ru.security59.parser/";
     private static final String PATH = SystemUtils.IS_OS_LINUX ? LINUX_PATH : WIN_PATH;
     private static String[] tiuHeader;
     private LinkedList<String[]> list;

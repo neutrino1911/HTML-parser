@@ -226,13 +226,11 @@ class HTMLParser {
     }
 
     private static void initLog() throws FileNotFoundException {
-        PrintStream out = new PrintStream(new FileOutputStream("out/out.log", true));
-        PrintStream dual = new DualStream(System.out, out);
-        System.setOut(dual);
+        PrintStream out = new PrintStream(new FileOutputStream("out.log", true));
+        System.setOut(new DualStream(System.out, out));
 
-        PrintStream err = new PrintStream(new FileOutputStream("out/err.log", true));
-        dual= new DualStream(System.err, err);
-        System.setErr(dual);
+        PrintStream err = new PrintStream(new FileOutputStream("err.log", true));
+        System.setErr(new DualStream(System.err, err));
 
         DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
         System.out.println(dateFormat.format(new Date()));
@@ -249,7 +247,7 @@ class HTMLParser {
         db_user = properties.getProperty("db_user");
         db_pass = properties.getProperty("db_pass");
         db_url = String.format(
-                "jdbc:mysql://%s:%s/parser?useUnicode=true&characterEncoding=utf-8&useSSL=false",
+                "jdbc:mysql://%s:%s/ru.security59.parser?useUnicode=true&characterEncoding=utf-8&useSSL=false",
                 properties.getProperty("db_host"),
                 properties.getProperty("db_port")
         );

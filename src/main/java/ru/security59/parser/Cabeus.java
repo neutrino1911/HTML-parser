@@ -5,9 +5,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
-import java.util.LinkedList;
-import java.util.List;
-
 class Cabeus/* extends Shop*/ {
     /*@Override
     LinkedList<String[]> getPriceList(LinkedList<String[]> config, LinkedList<String[]> export) {

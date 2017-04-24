@@ -1,3 +1,6 @@
-/.idea/workspace.xml
-/out/*.log
-/config.properties
+/.idea
+err.log
+out.log
+*.iml
+/target
+Будет удалено src/main/webapp/
