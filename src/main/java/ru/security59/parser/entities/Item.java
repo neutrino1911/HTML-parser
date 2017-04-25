@@ -1,29 +1,40 @@
-package ru.security59.parser;
+package ru.security59.parser.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import ru.security59.parser.util.Transliterator;
+
+import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Set;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
-class Item {
-    private int id;
-    private int categoryId;
-    private int vendorId;
-    private String availability;
-    private String currency;
-    private String description;
-    private HashSet<String> images;
-    private String name;
-    private String originId;
-    private String originURL;
-    private String price;
-    private String seoURL;
-    private String unit;
-    private String vendorName;
+@Entity
+@Table(name = "Products")
+public class Item {
 
-    Item(int categoryId, int vendorId, String currency, String originURL, String unit, String vendorName) {
+    @Id @Column(name = "prod_id") private int id;
+    @Column(name = "cat_id") private int categoryId;
+    @Column(name = "vend_id") private int vendorId;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vend_id") private Vendor vendor;
+    @Column(name = "availability") private String availability;
+    @Column(name = "currency") private String currency;
+    @Column(name = "prod_desc") private String description;
+    @OneToMany(mappedBy = "item") private Set<Image> images;
+    @Column(name = "prod_name") private String name;
+    @Column(name = "origin_id") private String originId;
+    @Column(name = "origin_url") private String originURL;
+    @Column(name = "price") private String price;
+    @Column(name = "seo_url") private String seoURL;
+    @Column(name = "unit") private String unit;
+    @Transient private String vendorName;
+
+    public Item() {}
+
+    public Item(int categoryId, int vendorId, String currency, String originURL, String unit, String vendorName) {
         this.categoryId = categoryId;
         this.vendorId = vendorId;
         this.currency = currency;
@@ -33,86 +44,92 @@ class Item {
         images = new HashSet<>();
     }
 
-    Item(int id, String price, String availability, String originUrl) {
+    public Item(int id, String price, String availability, String originUrl) {
         this.id = id;
         this.price = price;
         this.availability=availability;
         this.originURL = originUrl;
     }
 
-    void addImage(String image) {
+    public void addImage(Image image) {
         if (images.size() < 10) images.add(image);
     }
 
-    String getAvailability() {
+    public void addImage(String image) {}
+
+    public String getAvailability() {
         return availability;
     }
 
-    void setAvailability(String availability) {
+    public void setAvailability(String availability) {
         this.availability = availability;
     }
 
-    String getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    void setPrice(String price) {
+    public void setPrice(String price) {
         this.price = price.replaceAll(",", ".").replaceAll("[^0-9.]", "");
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
-    void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    int getCategoryId() {
+    public int getCategoryId() {
         return categoryId;
     }
 
-    void setCategoryId(int categoryId) {
+    public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
 
-    int getVendorId() {
+    public int getVendorId() {
         return vendorId;
     }
 
-    void setVendorId(int vendorId) {
+    public void setVendorId(int vendorId) {
         this.vendorId = vendorId;
     }
 
-    String getCurrency() {
+    public String getCurrency() {
         return currency;
     }
 
-    void setCurrency(String currency) {
+    public void setCurrency(String currency) {
         this.currency = currency.trim();
     }
 
-    String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = escapeHtml4(description.trim());
     }
 
-    HashSet<String> getImages() {
+    public Set<Image> getImages() {
         return images;
     }
 
-    String getName() {
+    public Set<String> getImages2() {
+        return null;
+    }
+
+    public String getName() {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         setName(name, true);
     }
 
-    void setName(String name, boolean addVendor) {
+    public void setName(String name, boolean addVendor) {
         this.name = escapeHtml4(name.trim());
         if (addVendor) addVendorToName();
 
@@ -120,47 +137,47 @@ class Item {
         seoURL = seoURL.replaceAll("\\W", "-").replaceAll("-+", "-").replaceAll("-$", "");
     }
 
-    String getOriginId() {
+    public String getOriginId() {
         return originId;
     }
 
-    void setOriginId(String originId) {
+    public void setOriginId(String originId) {
         this.originId = originId;
     }
 
-    String getOriginURL() {
+    public String getOriginURL() {
         return originURL;
     }
 
-    void setOriginURL(String originURL) {
+    public void setOriginURL(String originURL) {
         this.originURL = originURL;
     }
 
-    String getSeoURL() {
+    public String getSeoURL() {
         return seoURL;
     }
 
-    void setSeoURL(String seoURL) {
+    public void setSeoURL(String seoURL) {
         this.seoURL = seoURL;
     }
 
-    String getUnit() {
+    public String getUnit() {
         return unit;
     }
 
-    void setUnit(String unit) {
+    public void setUnit(String unit) {
         this.unit = unit;
     }
 
-    String getVendorName() {
+    public String getVendorName() {
         return vendorName;
     }
 
-    void setVendorName(String vendorName) {
+    public void setVendorName(String vendorName) {
         this.vendorName = vendorName;
     }
 
-    String getInsertQuery() {
+    public String getInsertQuery() {
         String queryTables = "prod_id, prod_name, price, currency, unit, cat_id, " +
                 "vend_id, prod_desc, availability, seo_url, origin_url, origin_id";
 
@@ -182,7 +199,7 @@ class Item {
         return String.format("INSERT INTO Products (%s) VALUES (%s);", queryTables, queryValues);
     }
 
-    String getUpdateQuery() {
+    public String getUpdateQuery() {
         StringBuilder query = new StringBuilder();
 
         query.append("UPDATE Products SET ");

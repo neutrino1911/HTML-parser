@@ -1,9 +1,11 @@
-package ru.security59.parser;
+package ru.security59.parser.shops;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import ru.security59.parser.entities.Item;
+import ru.security59.parser.entities.Target;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,10 +17,10 @@ import java.util.LinkedList;
 
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
-class Avangard extends Shop {
+public class Avangard extends Shop {
 
     @Override
-    void parseItems(Target target, boolean loadImages, boolean simulation) throws SQLException {
+    public void parseItems(Target target, boolean loadImages, boolean simulation) throws SQLException {
         this.loadImages = loadImages;
         this.simulation = simulation;
         //Обновляем время запуска
@@ -109,7 +111,6 @@ class Avangard extends Shop {
 
     @Override
     protected void getItemPrice(Item item) {
-
     }
 
     @Override

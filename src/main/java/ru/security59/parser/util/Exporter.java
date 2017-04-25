@@ -1,4 +1,4 @@
-package ru.security59.parser;
+package ru.security59.parser.util;
 
 import com.opencsv.CSVWriter;
 import org.apache.commons.lang3.SystemUtils;
@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 import static ru.security59.parser.HTMLParser.statement;
 
-class Exporter {
+public class Exporter {
 
     private static final String LINUX_PATH = "/home/neutrino/share/ru.security59.parser/";
     private static final String WIN_PATH = "C:/ru.security59.parser/";
@@ -46,7 +46,7 @@ class Exporter {
         sites = new String[] {"tiu", "uv"};
     }
 
-    Exporter() {
+    public Exporter() {
         list = new LinkedList<>();
         workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("sheet");
@@ -56,7 +56,7 @@ class Exporter {
             row.createCell(i).setCellValue(tiuHeader[i]);
     }
 
-    void write(int site, int[] vendors) {
+    public void write(int site, int[] vendors) {
         for (int vendor : vendors) {
             try {
                 switch (site) {
@@ -82,12 +82,12 @@ class Exporter {
         }
     }
 
-    void write(int site, int vendor) {
+    public void write(int site, int vendor) {
         int[] vendors = new int[]{vendor};
         write(site, vendors);
     }
 
-    void write(int site, int firstVendor, int lastVendor) {
+    public void write(int site, int firstVendor, int lastVendor) {
         int[] vendors = new int[lastVendor - firstVendor + 1];
         for (int i = 0; i < vendors.length; i++)
             vendors[i] = firstVendor + i;

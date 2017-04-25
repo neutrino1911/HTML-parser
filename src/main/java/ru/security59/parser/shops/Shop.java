@@ -1,24 +1,26 @@
-package ru.security59.parser;
+package ru.security59.parser.shops;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import ru.security59.parser.entities.Item;
+import ru.security59.parser.entities.Target;
 
 import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import static ru.security59.parser.HTMLParser.statement;
 import static ru.security59.parser.HTMLParser.export_path;
+import static ru.security59.parser.HTMLParser.statement;
 
-abstract class Shop {
+public abstract class Shop {
     private static final String LINUX_PATH = export_path;
     ResultSet resultSet;
     boolean loadImages;
     boolean simulation;
 
-    void parseItems(Target target, boolean loadImages, boolean simulation) throws SQLException {
+    public void parseItems(Target target, boolean loadImages, boolean simulation) throws SQLException {
         this.loadImages = loadImages;
         this.simulation = simulation;
         //Обновляем время запуска
@@ -87,7 +89,7 @@ abstract class Shop {
         );
     }
 
-    void parsePricesByTarget(Target target) throws SQLException {
+    public void parsePricesByTarget(Target target) throws SQLException {
         String query;
         //Обновляем время запуска
         if (!simulation) updateLaunchTime(target.getId());
@@ -118,9 +120,9 @@ abstract class Shop {
         }
     }
 
-    void parsePricesByVendor(int vendorId) throws SQLException {}
+    public void parsePricesByVendor(int vendorId) throws SQLException {}
 
-    int executeQuery(String query) throws SQLException {
+    public int executeQuery(String query) throws SQLException {
         int returnCode = 0;
         try {
             resultSet = statement.executeQuery(query);
@@ -132,7 +134,7 @@ abstract class Shop {
         return returnCode;
     }
 
-    int executeUpdate(String query) throws SQLException {
+    public int executeUpdate(String query) throws SQLException {
         int returnCode;
         try {
             returnCode = statement.executeUpdate(query);
@@ -144,7 +146,7 @@ abstract class Shop {
         return returnCode;
     }
 
-    void updateLaunchTime(int targetId) {
+    public void updateLaunchTime(int targetId) {
         String query = null;
         try {
             query = "SELECT last_use FROM Targets WHERE id=" + targetId + " AND first_use!=NULL;";
@@ -168,9 +170,9 @@ abstract class Shop {
 
     protected abstract LinkedList<String> getItemsURI(String URI);
 
-    void addImages(Item item) throws SQLException {
+    public void addImages(Item item) throws SQLException {
         int index = 0;
-        for (String image : item.getImages()) {
+        for (String image : item.getImages2()) {
             String imageName = String.format("%s-%d%s",
                     item.getSeoURL(),
                     index++,
@@ -241,11 +243,11 @@ abstract class Shop {
         System.out.println("ok");
     }
 
-    Document getDocument(String uri, int timeout) {
+    public Document getDocument(String uri) {
         System.out.println(uri);
         Document doc = null;
         Connection connection = Jsoup.connect(uri);
-        connection.timeout(timeout);
+        connection.timeout(30000);
         //connection.userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.100 Safari/537.36");
         int attempt = 0;
         while (attempt < 3) {
@@ -265,9 +267,5 @@ abstract class Shop {
             }
         }
         return doc;
-    }
-
-    Document getDocument(String uri) {
-        return getDocument(uri, 3000);
     }
 }

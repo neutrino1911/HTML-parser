@@ -1,12 +1,13 @@
-package ru.security59.parser;
+package ru.security59.parser.shops;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.security59.parser.entities.Item;
 
 import java.util.LinkedList;
 
-class LiderSB extends Shop {
+public class LiderSB extends Shop {
     private static final String DOMAIN = "http://sec-s.ru";
 
     @Override

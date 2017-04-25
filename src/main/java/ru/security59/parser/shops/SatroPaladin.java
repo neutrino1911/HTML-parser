@@ -1,12 +1,13 @@
-package ru.security59.parser;
+package ru.security59.parser.shops;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.security59.parser.entities.Item;
 
 import java.util.LinkedList;
 
-class SatroPaladin extends Shop {
+public class SatroPaladin extends Shop {
     private static final String DOMAIN = "http://www.satro-paladin.com";
 
     @Override
@@ -15,7 +16,7 @@ class SatroPaladin extends Shop {
         Document doc;
         Elements elements;
         while (true) {
-            doc = getDocument(uri, 10000);
+            doc = getDocument(uri);
             elements = doc.select("div.old_content > a.goods_name");
             for (Element element : elements)
                 if (element.attr("href").startsWith("http")) links.add(element.attr("href"));
@@ -30,7 +31,7 @@ class SatroPaladin extends Shop {
 
     @Override
     protected void getItemData(Item item) {
-        Document doc = getDocument(item.getOriginURL(), 10000);
+        Document doc = getDocument(item.getOriginURL());
         if (doc == null) return;
         Elements elements;
 
@@ -67,7 +68,7 @@ class SatroPaladin extends Shop {
 
     @Override
     protected void getItemPrice(Item item) {
-        Document doc = getDocument(item.getOriginURL(), 10000);
+        Document doc = getDocument(item.getOriginURL());
         if (doc == null) return;
         Elements elements;
 

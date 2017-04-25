@@ -1,7 +1,15 @@
 package ru.security59.parser;
 
 import org.apache.commons.cli.*;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import ru.security59.parser.entities.Item;
+import ru.security59.parser.entities.Target;
+import ru.security59.parser.shops.*;
+import ru.security59.parser.util.DualStream;
+import ru.security59.parser.util.Exporter;
 
+import javax.persistence.EntityManager;
 import java.io.*;
 import java.sql.*;
 import java.text.DateFormat;
@@ -9,17 +17,33 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
-class HTMLParser {
+public class HTMLParser {
     private static String db_url;
     private static String db_user;
     private static String db_pass;
-    static String export_path;
+    public static String export_path;
 
     private static Connection connection;
-    static Statement statement;
+    public static Statement statement;
 
     public static void main(String[] args) throws FileNotFoundException {
-        initLog();
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        EntityManager em = sessionFactory.createEntityManager();
+        /*Target target = em.find(Target.class, 1);
+        System.out.println(target);*/
+
+        Item item = em.find(Item.class, 54000001);
+
+
+
+        //target.setUrl("http://sec-s.ru/ip-videokamery-etrovision2");
+        /*em.getTransaction().begin();
+        em.merge(target);
+        em.getTransaction().commit();*/
+        em.close();
+        sessionFactory.close();
+
+        /*initLog();
         boolean isConfigLoaded = initConfig();
         if (!isConfigLoaded) return;
 
@@ -54,7 +78,7 @@ class HTMLParser {
         } finally {
             try { connection.close(); } catch(SQLException ignored) {}
             try { statement.close(); } catch(SQLException ignored) {}
-        }
+        }*/
     }
 
     private static Target getTarget(int targetId) {

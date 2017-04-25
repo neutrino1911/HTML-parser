@@ -1,8 +1,9 @@
-package ru.security59.parser;
+package ru.security59.parser.shops;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.security59.parser.entities.Item;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,7 +11,7 @@ import java.util.Map;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
-class Nag extends Shop {
+public class Nag extends Shop {
     private static final String DOMAIN = "http://shop.nag.ru";
     private LinkedList<String[]> itemList = new LinkedList<>();
 
@@ -66,7 +67,7 @@ class Nag extends Shop {
     protected LinkedList<String> getItemsURI(String uri) {
         LinkedList<String> links = new LinkedList<>();
         if (!uri.endsWith("?count=0")) uri += "?count=0";
-        Document doc = getDocument(uri, 10000);
+        Document doc = getDocument(uri);
         String selector = "div.homepage_cataloge > div.item_info > h2 > a";
         Elements elements = doc.select(selector);
         for (Element element : elements)
@@ -87,7 +88,7 @@ class Nag extends Shop {
         String images = "";
         String availability = "3";
 
-        Document doc = getDocument(uri, 10000);
+        Document doc = getDocument(uri);
         if (doc == null) return data;
         Elements elements;
 
