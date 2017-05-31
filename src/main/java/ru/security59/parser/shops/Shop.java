@@ -3,29 +3,25 @@ package ru.security59.parser.shops;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import ru.security59.parser.entities.Item;
+import ru.security59.parser.HTMLParser;
+import ru.security59.parser.entities.Failure;
+import ru.security59.parser.entities.Image;
+import ru.security59.parser.entities.Product;
 import ru.security59.parser.entities.Target;
 
+import javax.persistence.TypedQuery;
 import java.io.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.List;
 
-import static ru.security59.parser.HTMLParser.export_path;
-import static ru.security59.parser.HTMLParser.statement;
+import static ru.security59.parser.HTMLParser.entityManager;
 
 public abstract class Shop {
-    private static final String LINUX_PATH = export_path;
-    ResultSet resultSet;
-    boolean loadImages;
-    boolean simulation;
+    private static final String DIRECTORY = HTMLParser.export_path;
+    private final boolean LOAD_IMAGES = HTMLParser.loadImages;
+    static final boolean SIMULATION = HTMLParser.simulation;
 
-    public void parseItems(Target target, boolean loadImages, boolean simulation) throws SQLException {
-        this.loadImages = loadImages;
-        this.simulation = simulation;
-        //Обновляем время запуска
-        if (!simulation) updateLaunchTime(target.getId());
-
+    public void parseItems(Target target) {
         //Получаем ссылки на все товары категории
         LinkedList<String> links = getItemsURI(target.getUrl());
         int currentItemIndex = 1;
@@ -36,51 +32,48 @@ public abstract class Shop {
 
         //Проходим по всем ссылкам
         for (String link : links) {
-            String query;
+            //String query;
             System.out.printf("%3d/%3d ", currentItemIndex++, links.size());
-            Item item = new Item(
-                    target.getCategoryId(),
-                    target.getVendorId(),
-                    target.getCurrency(),
-                    link,
-                    target.getUnit(),
-                    target.getVendorName());
+            Product product = new Product();
+            product.setCategory(target.getCategory());
+            product.setVendor(target.getVendor());
+            product.setCurrency(target.getCurrency());
+            product.setOriginURL(link);
+            product.setUnit(target.getUnit());
 
             //Загружаем и парсим страницу
-            getItemData(item);
+            getItemData(product);
 
             //Если страница не загрузилась
-            if (item.getName() == null) {
-                System.out.println("Empty item " + item.getOriginURL());
-                query = String.format("INSERT INTO Failures (target_id, url) VALUES(%d, '%s');",
-                        target.getId(),
-                        link);
-                statement.executeUpdate(query);
+            if (product.getName() == null) {
+                System.out.println("Empty product " + product.getOriginURL());
+                Failure failure = new Failure();
+                failure.setTargetId(target.getId());
+                failure.setURL(link);
+                entityManager.getTransaction().begin();
+                entityManager.persist(failure);
+                entityManager.getTransaction().commit();
                 failedCount++;
                 continue;
             }
 
-            query = "SELECT prod_id FROM Products WHERE prod_name = '" + item.getName() + "';";
-            if (executeQuery(query) != 0) return;
-
-            //Если товар уже есть в базе
-            if (resultSet.next()) {
-                item.setId(resultSet.getInt("prod_id"));
-                if (!simulation) executeUpdate(item.getUpdateQuery());
-                updateCount++;
-            }
-            else {
-                item.setId(target.getNextId());
-                if (!simulation) executeUpdate(item.getInsertQuery());
+            TypedQuery<Product> query = entityManager
+                    .createQuery("SELECT P FROM Product P WHERE P.originId=:originId", Product.class);
+            query.setParameter("originId", product.getOriginId());
+            List<Product> list = query.getResultList();
+            if (list.isEmpty()) {
+                product.setId(target.getNextId());
+                if (!SIMULATION) entityManager.persist(product);
                 insertCount++;
             }
-            addImages(item);
+            else {
+                product.setId(list.get(0).getId());
+                if (!SIMULATION) entityManager.merge(product);
+                updateCount++;
+            }
+            loadImages(product);
             try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
         }
-
-        try { resultSet.close(); }
-        catch (SQLException ignored) {}
-
         System.out.printf("Inserted: %d\nUpdated: %d\nFailed: %d\nIgnored: %d\n",
                 insertCount,
                 updateCount,
@@ -89,133 +82,60 @@ public abstract class Shop {
         );
     }
 
-    public void parsePricesByTarget(Target target) throws SQLException {
-        String query;
-        //Обновляем время запуска
-        if (!simulation) updateLaunchTime(target.getId());
-        int minItemId = target.getVendorId() * 1000000 + target.getCategoryId() * 1000;
-        int maxItemId = minItemId + 999;
-        query = String.format("CALL getShortProd(%d, %d);", minItemId, maxItemId);
-        executeQuery(query);
-        LinkedList<Item> items = new LinkedList<>();
-        while (resultSet.next()) {
-            items.add(new Item(
-                    resultSet.getInt("prod_id"),
-                    resultSet.getString("price"),
-                    resultSet.getString("availability"),
-                    resultSet.getString("origin_url")
-            ));
-        }
-        int currentItemIndex = 1;
-        for (Item item : items) {
-            System.out.printf("%3d/%3d ", currentItemIndex++, items.size());
-            getItemPrice(item);
-            query = String.format("UPDATE Products SET price = %s, availability = '%s' WHERE prod_id = %d;",
-                    item.getPrice(),
-                    item.getAvailability(),
-                    item.getId()
-            );
-            executeUpdate(query);
-            try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
-        }
-    }
+    public void parsePricesByTarget(Target target) {}
 
-    public void parsePricesByVendor(int vendorId) throws SQLException {}
+    public void parsePricesByVendor(int vendorId) {}
 
-    public int executeQuery(String query) throws SQLException {
-        int returnCode = 0;
-        try {
-            resultSet = statement.executeQuery(query);
-        } catch (SQLException e) {
-            returnCode = 1;
-            System.out.println(query);
-            e.printStackTrace();
-        }
-        return returnCode;
-    }
+    void updateLaunchTime(int targetId) {}
 
-    public int executeUpdate(String query) throws SQLException {
-        int returnCode;
-        try {
-            returnCode = statement.executeUpdate(query);
-        } catch (SQLException e) {
-            returnCode = 1;
-            System.out.println(query);
-            e.printStackTrace();
-        }
-        return returnCode;
-    }
-
-    public void updateLaunchTime(int targetId) {
-        String query = null;
-        try {
-            query = "SELECT last_use FROM Targets WHERE id=" + targetId + " AND first_use!=NULL;";
-            resultSet = statement.executeQuery(query);
-            if (resultSet.next()) {
-                query = "CALL updateTimestamp(" + targetId + ");";
-                statement.executeQuery(query);
-            }
-            else {
-                query = "CALL setTimestamp(" + targetId + ");";
-                statement.executeQuery(query);
-            }
-        } catch (SQLException e) {
-            System.out.println(query);
-            e.printStackTrace();
-        }
-    }
-
-    protected abstract void getItemData(Item item);
-    protected abstract void getItemPrice(Item item);
+    protected abstract void getItemData(Product product);
+    protected abstract void getItemPrice(Product product);
 
     protected abstract LinkedList<String> getItemsURI(String URI);
 
-    public void addImages(Item item) throws SQLException {
-        int index = 0;
-        for (String image : item.getImages2()) {
-            String imageName = String.format("%s-%d%s",
-                    item.getSeoURL(),
-                    index++,
-                    image.substring(image.lastIndexOf('.'))
+    void loadImages(Product product) {
+        for (Image image : product.getImages()) {
+            if (LOAD_IMAGES) getImage(image);
+            TypedQuery<Image> query = entityManager.createQuery(
+                    "SELECT I FROM Image I WHERE I.product=:product AND I.url=:url",
+                    Image.class
             );
-            if (loadImages) getImage(image, imageName);
-            String query = String.format(
-                    "SELECT item_id, image_name FROM Images WHERE item_id = %d AND image_name = '%s';",
-                    item.getId(),
-                    imageName.replace(".png", ".jpg"));
-            executeQuery(query);
-            if (!resultSet.next())
-                if (!simulation) {
-                    query = String.format(
-                            "INSERT INTO Images (item_id, image_name, origin_url) VALUES (%d, '%s', '%s');",
-                            item.getId(),
-                            imageName.replace(".png", ".jpg"),
-                            image);
-                    executeUpdate(query);
-                }
+            query.setParameter("product", product);
+            query.setParameter("url", image.getUrl());
+            List<Image> list = query.getResultList();
+            if (list.isEmpty() && !SIMULATION) {
+                entityManager.getTransaction().begin();
+                entityManager.persist(image);
+                entityManager.getTransaction().commit();
+            }
         }
     }
 
-    private void getImage(String URI, String name) {
-        System.out.printf("        %s ", URI);
-        String newName = name.substring(0, name.lastIndexOf('.')) + ".jpg";
-        File file = new File(LINUX_PATH + "img/" + newName);
+    private void getImage(Image image) {
+        System.out.printf("        %s ", image.getUrl());
+        File file = new File(DIRECTORY + "img/" + image.getName());
         if (file.exists()) {
             System.out.println("exists");
             return;
         }
-        file = new File(LINUX_PATH);
+        String fileName = image.getUrl().replaceAll("^.+/", "");
+        file = new File(DIRECTORY);
         if (!file.exists())
             if (file.mkdir()) System.out.println("Directory " + file + " is created!");
             else System.out.println("Failed to create " + file + " directory!");
-        file = new File(LINUX_PATH + "new/");
+        file = new File(DIRECTORY + "new/");
         if (!file.exists())
             if (file.mkdir()) System.out.println("Directory " + file + " is created!");
             else System.out.println("Failed to create " + file + " directory!");
-        file = new File(LINUX_PATH + "new/" + name);
+        file = new File(DIRECTORY + "new/" + fileName);
         if (!file.exists()) {
             try {//wget URI -O outfile
-                Process wget = new ProcessBuilder("wget", URI, "-O", LINUX_PATH + "new/" + name).start();
+                Process wget = new ProcessBuilder(
+                        "wget",
+                        image.getUrl(),
+                        "-O",
+                        DIRECTORY + "new/" + fileName
+                ).start();
                 wget.waitFor();
                 Thread.sleep(100);
             } catch (Exception e) {
@@ -226,14 +146,15 @@ public abstract class Shop {
 
         try {//convert infile.png -resize '500x500>' -gravity Center -extent '500x500' outfile.jpg
             Process convert = new ProcessBuilder("convert",
-                    LINUX_PATH + "new/" + name,
+                    DIRECTORY + "new/" + fileName,
                     "-resize",
                     "500x500>",
                     "-gravity",
                     "Center",
                     "-extent",
                     "500x500",
-                    LINUX_PATH + "img/" + newName).start();
+                    DIRECTORY + "img/" + image.getUrl()
+            ).start();
             convert.waitFor();
             Thread.sleep(100);
         } catch (Exception e) {
@@ -243,12 +164,12 @@ public abstract class Shop {
         System.out.println("ok");
     }
 
-    public Document getDocument(String uri) {
+    Document getDocument(String uri) {
         System.out.println(uri);
         Document doc = null;
         Connection connection = Jsoup.connect(uri);
         connection.timeout(30000);
-        //connection.userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.100 Safari/537.36");
+        //connection.userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
         int attempt = 0;
         while (attempt < 3) {
             try {

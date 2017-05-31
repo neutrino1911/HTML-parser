@@ -4,14 +4,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
-import ru.security59.parser.entities.Item;
+import ru.security59.parser.entities.Product;
 import ru.security59.parser.entities.Target;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -20,11 +19,9 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 public class Avangard extends Shop {
 
     @Override
-    public void parseItems(Target target, boolean loadImages, boolean simulation) throws SQLException {
-        this.loadImages = loadImages;
-        this.simulation = simulation;
-        //Обновляем время запуска
-        if (!simulation) updateLaunchTime(target.getId());
+    public void parseItems(Target target) {
+        /*//Обновляем время запуска
+        if (!SIMULATION) updateLaunchTime(target.getId());
 
         Document document = null;
         try {
@@ -46,7 +43,7 @@ public class Avangard extends Shop {
         int failedCount = 0;
 
         HashSet<String> items = new HashSet<>();
-        Item item = null;
+        Product product = null;
 
         for (int index = 0; index < list.getLength(); index++) {
             Node node = list.item(index);
@@ -61,56 +58,53 @@ public class Avangard extends Shop {
             String name = unescapeHtml4(element.getElementsByTagName("name").item(0).getTextContent());
             if (!items.contains(name)) {//Если новый элемент
                 items.add(name);
-                if (index > 0) addImages(item);
-                item = new Item(
-                        0,
-                        target.getVendorId(),
-                        null,
-                        "",
-                        target.getUnit(),
-                        target.getVendorName()
-                );
-                item.setName(name, false);
-                item.setPrice(element.getElementsByTagName("price").item(0).getTextContent());
-                item.setAvailability("true".equals(element.getAttribute("available")) ? "+" : "0");
-                item.setCurrency(element.getElementsByTagName("currencyId").item(0).getTextContent());
-                item.setOriginId(element.getAttribute("id"));
-                item.setOriginURL(element.getElementsByTagName("url").item(0).getTextContent());
-                item.setDescription("");
+                if (index > 0) loadImages(product);
+                product = new Product();
+                product.setCategory(null);
+                product.setVendor(target.getVendor());
+                product.setUnit(target.getUnit());
+
+                product.setName(name, false);
+                product.setPrice(element.getElementsByTagName("price").item(0).getTextContent());
+                product.setAvailability("true".equals(element.getAttribute("available")) ? "+" : "0");
+                product.setCurrency(element.getElementsByTagName("currencyId").item(0).getTextContent());
+                product.setOriginId(element.getAttribute("id"));
+                product.setOriginURL(element.getElementsByTagName("url").item(0).getTextContent());
+                product.setDescription("");
                 for (int i = 0; i < element.getElementsByTagName("picture").getLength(); i++)
-                    item.addImage(element.getElementsByTagName("picture").item(i).getTextContent());
-                executeQuery("SELECT prod_id FROM Products WHERE prod_name = '" + item.getName() + "';");
+                    product.addImage(element.getElementsByTagName("picture").item(i).getTextContent());
+                executeQuery("SELECT prod_id FROM Products WHERE prod_name = '" + product.getName() + "';");
                 if (!resultSet.next()) {
-                    item.setId(target.getNextId());
-                    if (!simulation) executeUpdate(item.getInsertQuery());
+                    product.setId(target.getNextId());
+                    //if (!SIMULATION) executeUpdate(product.getInsertQuery());
                     insertCount++;
                 }
                 else {
-                    item.setId(resultSet.getInt("prod_id"));
-                    if (!simulation) executeUpdate(item.getUpdateQuery());
+                    product.setId(resultSet.getInt("prod_id"));
+                    //if (!SIMULATION) executeUpdate(product.getUpdateQuery());
                     updateCount++;
                 }
             }
             else {
                 for (int i = 0; i < element.getElementsByTagName("picture").getLength(); i++)
-                    item.addImage(element.getElementsByTagName("picture").item(i).getTextContent());
+                    product.addImage(element.getElementsByTagName("picture").item(i).getTextContent());
             }
         }
-        addImages(item);
+        loadImages(product);
         System.out.printf("Inserted: %d\nUpdated: %d\nFailed: %d\nIgnored: %d\n",
                 insertCount,
                 updateCount,
                 failedCount,
                 list.getLength() - insertCount - updateCount - failedCount
-        );
+        );*/
     }
 
     @Override
-    protected void getItemData(Item item) {
+    protected void getItemData(Product product) {
     }
 
     @Override
-    protected void getItemPrice(Item item) {
+    protected void getItemPrice(Product product) {
     }
 
     @Override

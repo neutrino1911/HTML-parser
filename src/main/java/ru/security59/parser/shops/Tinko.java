@@ -3,7 +3,7 @@ package ru.security59.parser.shops;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import ru.security59.parser.entities.Item;
+import ru.security59.parser.entities.Product;
 
 import java.util.LinkedList;
 
@@ -29,15 +29,15 @@ public class Tinko extends Shop {
     }
 
     @Override
-    protected void getItemData(Item item) {
-        Document doc = getDocument(item.getOriginURL());
+    protected void getItemData(Product product) {
+        Document doc = getDocument(product.getOriginURL());
         if (doc == null) return;
         Elements elements;
 
         //Название
         elements = doc.select("div.breadcrumbs h1");
         if (elements.size() > 0)
-            item.setName(elements.get(0).childNode(0).toString());
+            product.setName(elements.get(0).childNode(0).toString());
 
         //Описание
         elements = doc.select("div.product-shop__short-description > div");
@@ -45,7 +45,7 @@ public class Tinko extends Shop {
         elements.select("img").remove();
         elements.select("*").removeAttr("style");
         if (elements.size() > 0)
-            item.setDescription(elements.get(0).html());
+            product.setDescription(elements.get(0).html());
 
         elements = doc.select("div#techdata > ul");
         elements.select("a").remove();
@@ -53,7 +53,7 @@ public class Tinko extends Shop {
         elements.select("*").removeAttr("style");
         if (elements.size() > 0) {
             String description;
-            description = "\n<br />\n<table class=\"item-desc-table\"><tbody>";
+            description = "\n<br />\n<table class=\"product-desc-table\"><tbody>";
             for (Element element : elements.select("li")) {
                 description += "<tr><td>";
                 if (element.childNodes().size() > 0)
@@ -64,39 +64,39 @@ public class Tinko extends Shop {
                 description += "</td></tr>";
             }
             description += "</tbody></table>";
-            item.setDescription(item.getDescription() + description);
+            product.setDescription(product.getDescription() + description);
         }
 
         //Цена
         elements = doc.select("div.price-box > div.min > p");
         if (elements.size() > 0)
-            item.setPrice(elements.get(0).childNode(0).toString());
+            product.setPrice(elements.get(0).childNode(0).toString());
 
         //Наличие
-        if ("0".equals(item.getPrice())) item.setAvailability("0");
-        else item.setAvailability("+");
+        if ("0".equals(product.getPrice())) product.setAvailability("0");
+        else product.setAvailability("+");
 
         //Изображение
         elements = doc.select("div.product-image > a");
         for (Element element : elements) {
-            String image = element.attr("href").replaceAll(",", "%2C");
-            item.addImage(image.startsWith("http") ? image : DOMAIN + image);
+            /*String image = element.attr("href").replaceAll(",", "%2C");
+            product.addImage(image.startsWith("http") ? image : DOMAIN + image);*/
         }
     }
 
     @Override
-    protected void getItemPrice(Item item) {
-        Document doc = getDocument(item.getOriginURL());
+    protected void getItemPrice(Product product) {
+        Document doc = getDocument(product.getOriginURL());
         if (doc == null) return;
         Elements elements;
 
         //Цена
         elements = doc.select("div.price-box > div.min > p");
         if (elements.size() > 0)
-            item.setPrice(elements.get(0).childNode(0).toString());
+            product.setPrice(elements.get(0).childNode(0).toString());
 
         //Наличие
-        if ("0".equals(item.getPrice())) item.setAvailability("0");
-        else item.setAvailability("+");
+        if ("0".equals(product.getPrice())) product.setAvailability("0");
+        else product.setAvailability("+");
     }
 }

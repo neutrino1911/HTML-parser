@@ -5,38 +5,35 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Targets")
 public class Target {
-
     @Id @Column(name = "id") private int id;
-    @Column(name = "cat_id") private int categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cat_id") private Category category;
     @Transient private int lastId;
     @Transient private int nextId;
-    @Column(name = "vend_id") private int vendorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vend_id") private Vendor vendor;
     @Column(name = "currency") private String currency;
     @Column(name = "unit") private String unit;
     @Column(name = "url")  private String url;
-    @Transient private String vendorName;
 
-    public Target() {
+    public Target() {}
 
-    }
-
-    public Target(int id, int categoryId, int lastId, int vendorId, String currency, String unit, String url, String vendorName) {
+    public Target(int id, Category category, int lastId, Vendor vendor, String currency, String unit, String url) {
         this.id = id;
-        this.categoryId = categoryId;
+        this.category = category;
         this.lastId = lastId;
-        this.vendorId = vendorId;
+        this.vendor = vendor;
         this.currency = currency;
         this.unit = unit;
         this.url = url;
-        this.vendorName = vendorName;
         if (lastId > 0) nextId = lastId + 1;
-        else nextId = vendorId * 1000000 + categoryId * 1000 + 1;
+        else nextId = vendor.getId() * 1000000 + category.getId() * 1000 + 1;
     }
 
     public int getNextId() {
         if (nextId == 0) {
             if (lastId > 0) nextId = lastId + 1;
-            else nextId = vendorId * 1000000 + categoryId * 1000 + 1;
+            else nextId = vendor.getId() * 1000000 + category.getId() * 1000 + 1;
         }
         return nextId++;
     }
@@ -49,12 +46,12 @@ public class Target {
         this.id = id;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public int getLastId() {
@@ -65,12 +62,12 @@ public class Target {
         this.lastId = lastId;
     }
 
-    public int getVendorId() {
-        return vendorId;
+    public Vendor getVendor() {
+        return vendor;
     }
 
-    public void setVendorId(int vendorId) {
-        this.vendorId = vendorId;
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
     }
 
     public String getCurrency() {
@@ -95,13 +92,5 @@ public class Target {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getVendorName() {
-        return vendorName;
-    }
-
-    public void setVendorName(String vendorName) {
-        this.vendorName = vendorName;
     }
 }

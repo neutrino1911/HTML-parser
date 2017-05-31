@@ -13,10 +13,10 @@
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.connection.characterEncoding">utf8</property>
 
-
-        <mapping class="ru.security59.parser.entities.Target"/>
+        <mapping class="ru.security59.parser.entities.Category"/>
         <mapping class="ru.security59.parser.entities.Image"/>
-        <mapping class="ru.security59.parser.entities.Item"/>
+        <mapping class="ru.security59.parser.entities.Product"/>
+        <mapping class="ru.security59.parser.entities.Target"/>
         <mapping class="ru.security59.parser.entities.Vendor"/>
     </session-factory>
 </hibernate-configuration>

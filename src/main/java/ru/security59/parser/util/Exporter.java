@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
-import static ru.security59.parser.HTMLParser.statement;
 
 public class Exporter {
 
@@ -95,7 +94,7 @@ public class Exporter {
     }
 
     private void getTiuExport(int vendorId) throws SQLException {
-        HSSFSheet sheet = workbook.getSheet("sheet");
+        /*HSSFSheet sheet = workbook.getSheet("sheet");
         Row row;
         //Запрашиваем данные из БД
         ResultSet resultSet = statement.executeQuery("CALL getTiuImport(" + vendorId + ");");
@@ -124,11 +123,11 @@ public class Exporter {
                 System.out.println(resultSet.getInt("prod_id"));
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     private void getUvExport(int vendorId) throws SQLException {
-        ResultSet resultSet = statement.executeQuery("CALL getUvImport(" + vendorId + ");");
+        /*ResultSet resultSet = statement.executeQuery("CALL getUvImport(" + vendorId + ");");
         String[] line;
         while (resultSet.next()) {
             line = new String[11];
@@ -147,7 +146,7 @@ public class Exporter {
             line[9] = resultSet.getString("seo_url");
             line[10] = resultSet.getString("cat_keywords");
             list.add(line);
-        }
+        }*/
     }
 
     private void writeXLS() {

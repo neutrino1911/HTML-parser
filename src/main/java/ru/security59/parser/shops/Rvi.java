@@ -3,7 +3,7 @@ package ru.security59.parser.shops;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import ru.security59.parser.entities.Item;
+import ru.security59.parser.entities.Product;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -91,8 +91,8 @@ public class Rvi extends Shop {
     }
 
     @Override
-    protected void getItemData(Item item) {}
+    protected void getItemData(Product product) {}
 
     @Override
-    protected void getItemPrice(Item item) {}
+    protected void getItemPrice(Product product) {}
 }

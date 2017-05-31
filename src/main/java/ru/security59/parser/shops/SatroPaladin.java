@@ -3,20 +3,34 @@ package ru.security59.parser.shops;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import ru.security59.parser.entities.Item;
+import ru.security59.parser.entities.Image;
+import ru.security59.parser.entities.Product;
 
 import java.util.LinkedList;
 
 public class SatroPaladin extends Shop {
-    private static final String DOMAIN = "http://www.satro-paladin.com";
+    private static final String DOMAIN = "https://www.satro-paladin.com";
 
     @Override
     protected LinkedList<String> getItemsURI(String uri) {
         LinkedList<String> links = new LinkedList<>();
-        Document doc;
+        Document doc = getDocument(uri);
         Elements elements;
-        while (true) {
+        int count = Integer.valueOf(doc.select("p.count_search > span").get(0).html().trim());
+        for (int i = 0; i < Math.floor(count / 25d); i++) {
+            if (i > 0) {
+                doc = getDocument(uri + "&page=" + (i + 1));
+            }
+            elements = doc.select("div.old_content > a.goods_name");
+            for (Element element : elements)
+                if (element.attr("href").startsWith("http")) links.add(element.attr("href"));
+                else links.add(DOMAIN + element.attr("href"));
+        }
+        /*while (true) {
             doc = getDocument(uri);
+            if (count == 0) {
+                count = Integer.valueOf(doc.select("p.count_search > span").get(0).html().trim());
+            }
             elements = doc.select("div.old_content > a.goods_name");
             for (Element element : elements)
                 if (element.attr("href").startsWith("http")) links.add(element.attr("href"));
@@ -24,21 +38,22 @@ public class SatroPaladin extends Shop {
             elements = doc.select("div.paginator > div > *:last-child");
             if (elements.size() == 0 || "b".equals(elements.get(0).tagName())) break;
             uri = doc.select("div.paginator > div > *:nth-last-child(2)").get(0).attr("href");
-            if (!uri.startsWith("http")) uri = DOMAIN + uri;
-        }
+            //uri = uri.replaceAll("catalog_search\\.htm", "catalog_search.php");
+            if (!uri.startsWith("https")) uri = DOMAIN + uri;
+        }*/
         return links;
     }
 
     @Override
-    protected void getItemData(Item item) {
-        Document doc = getDocument(item.getOriginURL());
+    protected void getItemData(Product product) {
+        Document doc = getDocument(product.getOriginURL());
         if (doc == null) return;
         Elements elements;
 
         //Название
         elements = doc.select("h1");
         if (elements.size() > 0)
-            item.setName(elements.get(0).childNode(0).toString());
+            product.setName(elements.get(0).childNode(0).toString());
 
         //Описание
         elements = doc.select("div#good_desc.desc");
@@ -46,29 +61,30 @@ public class SatroPaladin extends Shop {
         //elements.select("img").remove();
         //elements.select("*").removeAttr("style");
         if (elements.size() > 0)
-            item.setDescription(elements.get(0).childNode(0).toString());
+            product.setDescription(elements.get(0).childNode(0).toString());
 
         //Цена
         elements = doc.select("p.price.retail-price");
         elements.select("span").remove();
         if (elements.size() > 0)
-            item.setPrice(elements.get(0).childNode(0).toString());
+            product.setPrice(elements.get(0).childNode(0).toString());
 
         //Наличие
-        if ("0".equals(item.getPrice())) item.setAvailability("0");
-        else item.setAvailability("+");
+        if ("0".equals(product.getPrice())) product.setAvailability("0");
+        else product.setAvailability("+");
 
         //Изображение
         elements = doc.select("a.colorbox");
         for (Element element : elements) {
-            String image = element.attr("href").replaceAll(",", "%2C");
-            item.addImage(image.startsWith("http") ? image : DOMAIN + image);
+            String imageURL = element.attr("href").replaceAll(",", "%2C");
+            imageURL = imageURL.startsWith("http") ? imageURL : DOMAIN + imageURL;
+            product.addImage(new Image(imageURL, product));
         }
     }
 
     @Override
-    protected void getItemPrice(Item item) {
-        Document doc = getDocument(item.getOriginURL());
+    protected void getItemPrice(Product product) {
+        Document doc = getDocument(product.getOriginURL());
         if (doc == null) return;
         Elements elements;
 
@@ -76,10 +92,10 @@ public class SatroPaladin extends Shop {
         elements = doc.select("p.price.retail-price");
         elements.select("span").remove();
         if (elements.size() > 0)
-            item.setPrice(elements.get(0).childNode(0).toString());
+            product.setPrice(elements.get(0).childNode(0).toString());
 
         //Наличие
-        if ("0".equals(item.getPrice())) item.setAvailability("0");
-        else item.setAvailability("+");
+        if ("0".equals(product.getPrice())) product.setAvailability("0");
+        else product.setAvailability("+");
     }
 }

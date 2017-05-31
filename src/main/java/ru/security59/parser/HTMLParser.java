@@ -3,7 +3,6 @@ package ru.security59.parser;
 import org.apache.commons.cli.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import ru.security59.parser.entities.Item;
 import ru.security59.parser.entities.Target;
 import ru.security59.parser.shops.*;
 import ru.security59.parser.util.DualStream;
@@ -11,57 +10,40 @@ import ru.security59.parser.util.Exporter;
 
 import javax.persistence.EntityManager;
 import java.io.*;
-import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 public class HTMLParser {
-    private static String db_url;
-    private static String db_user;
-    private static String db_pass;
     public static String export_path;
-
-    private static Connection connection;
-    public static Statement statement;
+    public static boolean loadImages = true;
+    public static boolean simulation = true;
+    public static EntityManager entityManager;
 
     public static void main(String[] args) throws FileNotFoundException {
+        initLog();
+        if (!initConfig()) return;
+        CommandLine cmd = initCMD(args);
+        if (cmd == null) return;
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-        EntityManager em = sessionFactory.createEntityManager();
-        /*Target target = em.find(Target.class, 1);
-        System.out.println(target);*/
+        entityManager = sessionFactory.createEntityManager();
 
-        Item item = em.find(Item.class, 54000001);
+        if (cmd.hasOption("e")) export(cmd);
+        else if (cmd.hasOption("p")) parsePrices(cmd);
+        else if (cmd.hasOption("t")) parseTargets(cmd);
+        else if (cmd.hasOption("vendor") && cmd.getArgList().size() > 0)
+            parseVendor(Integer.parseInt(cmd.getArgList().get(0)));
 
-
-
-        //target.setUrl("http://sec-s.ru/ip-videokamery-etrovision2");
-        /*em.getTransaction().begin();
-        em.merge(target);
-        em.getTransaction().commit();*/
-        em.close();
+        entityManager.close();
         sessionFactory.close();
 
-        /*initLog();
-        boolean isConfigLoaded = initConfig();
-        if (!isConfigLoaded) return;
-
-        Options options = new Options();
-        options.addOption("t", "target", false, "Parse items by target");
-        //options.addOption("u", "update", false, "Update items. Use only with -t");
-        options.addOption("p", "prices", false, "Parse prices by target");
-        options.addOption("e", "export", true, "Write export by vendor");
-        options.addOption("vendor", false, "Parse items by vendor");
-
-        CommandLineParser parser = new DefaultParser();
-        CommandLine cmd;
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return;
-        }
+        /*
+        initLog();
+        if (!initConfig()) return;
+        CommandLine cmd = initCMD(args);
+        if (cmd == null) return;
 
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -78,34 +60,13 @@ public class HTMLParser {
         } finally {
             try { connection.close(); } catch(SQLException ignored) {}
             try { statement.close(); } catch(SQLException ignored) {}
-        }*/
+        }
+        */
     }
 
     private static Target getTarget(int targetId) {
         System.out.println("Target id: " + targetId);
-        String query = String.format("CALL getTargetById(%d);", targetId);
-        ResultSet resultSet = null;
-        Target target = null;
-        try {
-            resultSet = statement.executeQuery(query);
-            resultSet.next();
-            target = new Target(
-                    targetId,
-                    resultSet.getInt("cat_id"),
-                    resultSet.getInt("last_id"),
-                    resultSet.getInt("vend_id"),
-                    resultSet.getString("currency"),
-                    resultSet.getString("unit"),
-                    resultSet.getString("url"),
-                    resultSet.getString("vend_name")
-            );
-        } catch (SQLException e) {
-            System.out.println(query);
-            e.printStackTrace();
-        } finally {
-            if (resultSet != null) try { resultSet.close(); } catch(SQLException ignored) {}
-        }
-        return target;
+        return entityManager.find(Target.class, targetId);
     }
 
     private static Shop getShop(String url) {
@@ -167,13 +128,10 @@ public class HTMLParser {
         Shop shop;
         for (int targetId : targets) {
             target = getTarget(targetId);
+            if (target == null) continue;
             shop = getShop(target.getUrl());
             if (shop == null) continue;
-            try {
-                shop.parseItems(target, true, false);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            shop.parseItems(target);
         }
     }
 
@@ -189,7 +147,8 @@ public class HTMLParser {
         int firstTarget;
         int lastTarget;
         firstTarget = Integer.parseInt(arguments.get(0));
-        if (arguments.size() > 1) lastTarget = Integer.parseInt(arguments.get(1));
+        if (arguments.size() > 1)
+            lastTarget = Integer.parseInt(arguments.get(1));
         else lastTarget = firstTarget;
         parseTargets(firstTarget, lastTarget);
     }
@@ -199,13 +158,10 @@ public class HTMLParser {
         Shop shop;
         for (int targetId : targets) {
             target = getTarget(targetId);
+            if (target == null) continue;
             shop = getShop(target.getUrl());
             if (shop == null) continue;
-            try {
-                shop.parsePricesByTarget(target);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            shop.parsePricesByTarget(target);
         }
     }
 
@@ -227,7 +183,7 @@ public class HTMLParser {
     }
 
     private static void parseVendor(int vendor) {
-        String query = null;
+        /*String query = null;
         int[] targets = null;
         try {
             ResultSet resultSet;
@@ -246,7 +202,7 @@ public class HTMLParser {
             System.out.println(query);
             e.printStackTrace();
         }
-        if (targets != null) parseTargets(targets);
+        if (targets != null) parseTargets(targets);*/
     }
 
     private static void initLog() throws FileNotFoundException {
@@ -263,19 +219,31 @@ public class HTMLParser {
     private static boolean initConfig() {
         Properties properties = new Properties();
         try {
-            properties.load(new FileInputStream("config.properties"));
+            properties.load(HTMLParser.class.getClassLoader().getResourceAsStream("config.properties"));
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
-        db_user = properties.getProperty("db_user");
-        db_pass = properties.getProperty("db_pass");
-        db_url = String.format(
-                "jdbc:mysql://%s:%s/ru.security59.parser?useUnicode=true&characterEncoding=utf-8&useSSL=false",
-                properties.getProperty("db_host"),
-                properties.getProperty("db_port")
-        );
         export_path = properties.getProperty("export_path");
         return true;
+    }
+
+    private static CommandLine initCMD(String[] args) {
+        Options options = new Options();
+        options.addOption("t", "target", false, "Parse items by target");
+        //options.addOption("u", "update", false, "Update items. Use only with -t");
+        options.addOption("p", "prices", false, "Parse prices by target");
+        options.addOption("e", "export", true, "Write export by vendor");
+        options.addOption("vendor", false, "Parse items by vendor");
+
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd;
+        try {
+            cmd = parser.parse(options, args);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return cmd;
     }
 }

@@ -5,13 +5,20 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Images")
 public class Image {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id") private int id;
-    @Column(name = "image_name") private String name;
-    @Column(name = "origin_url") private String url;
+    @Column(name = "name") private String name;
+    @Column(name = "url") private String url;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id") private Item item;
+    @JoinColumn(name = "prod_id") private Product product;
+
+    public Image() {}
+
+    public Image(String url, Product product) {
+        this.url = url;
+        this.product = product;
+        this.name = String.format("%s-%d.jpg", product.getSeoURL(), product.getImages().size());
+    }
 
     public int getId() {
         return id;
@@ -35,6 +42,14 @@ public class Image {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @Override
