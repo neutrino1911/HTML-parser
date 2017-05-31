@@ -73,15 +73,4 @@ public class Category {
         result = 31 * result + tiuCatId;
         return result;
     }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", tiuId=" + tiuId +
-                ", uvId=" + uvId +
-                ", tiuCatId=" + tiuCatId +
-                '}';
-    }
 }

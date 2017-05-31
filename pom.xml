@@ -58,25 +58,12 @@
             <artifactId>hibernate-core</artifactId>
             <version>5.2.10.Final</version>
         </dependency>
-    </dependencies>
+        <!-- https://mvnrepository.com/artifact/com.github.v-ladynev/fluent-hibernate-core -->
+        <dependency>
+            <groupId>com.github.v-ladynev</groupId>
+            <artifactId>fluent-hibernate-core</artifactId>
+            <version>0.3.1</version>
+        </dependency>
 
-    <build>
-        <finalName>HTML-parser</finalName>
-        <plugins>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <finalName>HTML-parser</finalName>
-                    <archive>
-                        <manifest>
-                            <mainClass>ru.security59.parser.HTMLParser</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    </dependencies>
 </project>

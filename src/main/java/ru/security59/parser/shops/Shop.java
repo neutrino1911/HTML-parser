@@ -19,7 +19,7 @@ import static ru.security59.parser.HTMLParser.entityManager;
 public abstract class Shop {
     private static final String DIRECTORY = HTMLParser.export_path;
     private final boolean LOAD_IMAGES = HTMLParser.loadImages;
-    static final boolean SIMULATION = HTMLParser.simulation;
+    private static final boolean SIMULATION = HTMLParser.simulation;
 
     public void parseItems(Target target) {
         //Получаем ссылки на все товары категории
@@ -32,7 +32,6 @@ public abstract class Shop {
 
         //Проходим по всем ссылкам
         for (String link : links) {
-            //String query;
             System.out.printf("%3d/%3d ", currentItemIndex++, links.size());
             Product product = new Product();
             product.setCategory(target.getCategory());
@@ -63,12 +62,16 @@ public abstract class Shop {
             List<Product> list = query.getResultList();
             if (list.isEmpty()) {
                 product.setId(target.getNextId());
+                entityManager.getTransaction().begin();
                 if (!SIMULATION) entityManager.persist(product);
+                entityManager.getTransaction().commit();
                 insertCount++;
             }
             else {
                 product.setId(list.get(0).getId());
+                entityManager.getTransaction().begin();
                 if (!SIMULATION) entityManager.merge(product);
+                entityManager.getTransaction().commit();
                 updateCount++;
             }
             loadImages(product);
@@ -90,10 +93,9 @@ public abstract class Shop {
 
     protected abstract void getItemData(Product product);
     protected abstract void getItemPrice(Product product);
-
     protected abstract LinkedList<String> getItemsURI(String URI);
 
-    void loadImages(Product product) {
+    private void loadImages(Product product) {
         for (Image image : product.getImages()) {
             if (LOAD_IMAGES) getImage(image);
             TypedQuery<Image> query = entityManager.createQuery(

@@ -92,6 +92,7 @@ public class Product {
     }
 
     public Set<Image> getImages() {
+        if (images == null) images = new HashSet<>(10);
         return images;
     }
 
@@ -142,6 +143,39 @@ public class Product {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Product product = (Product) o;
+
+        if (!category.equals(product.category)) return false;
+        if (!vendor.equals(product.vendor)) return false;
+        if (!availability.equals(product.availability)) return false;
+        if (!currency.equals(product.currency)) return false;
+        if (!description.equals(product.description)) return false;
+        if (!name.equals(product.name)) return false;
+        if (!originId.equals(product.originId)) return false;
+        if (!originURL.equals(product.originURL)) return false;
+        if (!price.equals(product.price)) return false;
+        if (!seoURL.equals(product.seoURL)) return false;
+        return unit.equals(product.unit);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = category.hashCode();
+        result = 31 * result + vendor.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + originId.hashCode();
+        result = 31 * result + originURL.hashCode();
+        result = 31 * result + price.hashCode();
+        result = 31 * result + seoURL.hashCode();
+        result = 31 * result + unit.hashCode();
+        return result;
     }
 
     private void addVendorToName() {

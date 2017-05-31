@@ -8,35 +8,12 @@ public class Target {
     @Id @Column(name = "id") private int id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cat_id") private Category category;
-    @Transient private int lastId;
-    @Transient private int nextId;
+    @Column(name = "last_id")  private int lastId;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vend_id") private Vendor vendor;
     @Column(name = "currency") private String currency;
     @Column(name = "unit") private String unit;
     @Column(name = "url")  private String url;
-
-    public Target() {}
-
-    public Target(int id, Category category, int lastId, Vendor vendor, String currency, String unit, String url) {
-        this.id = id;
-        this.category = category;
-        this.lastId = lastId;
-        this.vendor = vendor;
-        this.currency = currency;
-        this.unit = unit;
-        this.url = url;
-        if (lastId > 0) nextId = lastId + 1;
-        else nextId = vendor.getId() * 1000000 + category.getId() * 1000 + 1;
-    }
-
-    public int getNextId() {
-        if (nextId == 0) {
-            if (lastId > 0) nextId = lastId + 1;
-            else nextId = vendor.getId() * 1000000 + category.getId() * 1000 + 1;
-        }
-        return nextId++;
-    }
 
     public int getId() {
         return id;
@@ -92,5 +69,34 @@ public class Target {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Target target = (Target) o;
+
+        if (!category.equals(target.category)) return false;
+        if (!vendor.equals(target.vendor)) return false;
+        if (!currency.equals(target.currency)) return false;
+        if (!unit.equals(target.unit)) return false;
+        return url.equals(target.url);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = category.hashCode();
+        result = 31 * result + vendor.hashCode();
+        result = 31 * result + currency.hashCode();
+        result = 31 * result + unit.hashCode();
+        result = 31 * result + url.hashCode();
+        return result;
+    }
+
+    public int getNextId() {
+        if (lastId == 0)  lastId = vendor.getId() * 1000000 + category.getId() * 1000;
+        return ++lastId;
     }
 }

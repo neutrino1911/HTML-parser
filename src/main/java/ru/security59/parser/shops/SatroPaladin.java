@@ -17,7 +17,7 @@ public class SatroPaladin extends Shop {
         Document doc = getDocument(uri);
         Elements elements;
         int count = Integer.valueOf(doc.select("p.count_search > span").get(0).html().trim());
-        for (int i = 0; i < Math.floor(count / 25d); i++) {
+        for (int i = 0; i < Math.ceil(count / 25.0); i++) {
             if (i > 0) {
                 doc = getDocument(uri + "&page=" + (i + 1));
             }
@@ -50,36 +50,42 @@ public class SatroPaladin extends Shop {
         if (doc == null) return;
         Elements elements;
 
+        //Код
+        elements = doc.select("div.goods-code-n > span");
+        if (elements.size() > 0)
+            product.setOriginId(elements.get(0).html());
+
         //Название
         elements = doc.select("h1");
         if (elements.size() > 0)
-            product.setName(elements.get(0).childNode(0).toString());
+            product.setName(elements.get(0).html());
 
         //Описание
-        elements = doc.select("div#good_desc.desc");
+        elements = doc.select("div#longdecr");
+        elements.select("section").remove();
         //elements.select("a").remove();
         //elements.select("img").remove();
         //elements.select("*").removeAttr("style");
         if (elements.size() > 0)
-            product.setDescription(elements.get(0).childNode(0).toString());
+            product.setDescription(elements.get(0).html());
 
         //Цена
-        elements = doc.select("p.price.retail-price");
-        elements.select("span").remove();
+        elements = doc.select("p.price.wholesale-price > span:nth-child(2)");
+        //elements.select("span").remove();
         if (elements.size() > 0)
-            product.setPrice(elements.get(0).childNode(0).toString());
+            product.setPrice(elements.get(0).html());
 
         //Наличие
         if ("0".equals(product.getPrice())) product.setAvailability("0");
         else product.setAvailability("+");
 
         //Изображение
-        elements = doc.select("a.colorbox");
+        /*elements = doc.select("a.colorbox");
         for (Element element : elements) {
             String imageURL = element.attr("href").replaceAll(",", "%2C");
             imageURL = imageURL.startsWith("http") ? imageURL : DOMAIN + imageURL;
             product.addImage(new Image(imageURL, product));
-        }
+        }*/
     }
 
     @Override

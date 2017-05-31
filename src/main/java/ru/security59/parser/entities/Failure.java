@@ -34,4 +34,22 @@ public class Failure {
     public void setURL(String URL) {
         this.URL = URL;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Failure failure = (Failure) o;
+
+        if (targetId != failure.targetId) return false;
+        return URL.equals(failure.URL);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = targetId;
+        result = 31 * result + URL.hashCode();
+        return result;
+    }
 }

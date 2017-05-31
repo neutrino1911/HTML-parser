@@ -11,8 +11,6 @@ public class Vendor {
     @Column(name = "country") private String country;
     @Column(name = "warranty") private int warranty;
 
-    public Vendor() {}
-
     public int getId() {
         return id;
     }
@@ -43,5 +41,25 @@ public class Vendor {
 
     public void setWarranty(int warranty) {
         this.warranty = warranty;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vendor vendor = (Vendor) o;
+
+        if (warranty != vendor.warranty) return false;
+        if (!name.equals(vendor.name)) return false;
+        return country.equals(vendor.country);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + country.hashCode();
+        result = 31 * result + warranty;
+        return result;
     }
 }

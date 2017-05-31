@@ -19,7 +19,7 @@ import java.util.Properties;
 public class HTMLParser {
     public static String export_path;
     public static boolean loadImages = true;
-    public static boolean simulation = true;
+    public static boolean simulation = false;
     public static EntityManager entityManager;
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -27,41 +27,23 @@ public class HTMLParser {
         if (!initConfig()) return;
         CommandLine cmd = initCMD(args);
         if (cmd == null) return;
+        /*Configuration configuration = new Configuration();
+        EntityScanner.scanPackages("ru.security59.parser.entities").addTo(configuration);
+        SessionFactory sessionFactory = configuration.buildSessionFactory();*/
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         entityManager = sessionFactory.createEntityManager();
 
-        if (cmd.hasOption("e")) export(cmd);
-        else if (cmd.hasOption("p")) parsePrices(cmd);
-        else if (cmd.hasOption("t")) parseTargets(cmd);
+        if (cmd.hasOption("e"))
+            export(cmd);
+        else if (cmd.hasOption("p"))
+            parsePrices(cmd);
+        else if (cmd.hasOption("t"))
+            parseTargets(cmd);
         else if (cmd.hasOption("vendor") && cmd.getArgList().size() > 0)
             parseVendor(Integer.parseInt(cmd.getArgList().get(0)));
 
         entityManager.close();
         sessionFactory.close();
-
-        /*
-        initLog();
-        if (!initConfig()) return;
-        CommandLine cmd = initCMD(args);
-        if (cmd == null) return;
-
-        try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(db_url, db_user, db_pass);
-            statement = connection.createStatement();
-
-            if (cmd.hasOption("e")) export(cmd);
-            else if (cmd.hasOption("p")) parsePrices(cmd);
-            else if (cmd.hasOption("t")) parseTargets(cmd);
-            else if (cmd.hasOption("vendor") && cmd.getArgList().size() > 0)
-                parseVendor(Integer.parseInt(cmd.getArgList().get(0)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { connection.close(); } catch(SQLException ignored) {}
-            try { statement.close(); } catch(SQLException ignored) {}
-        }
-        */
     }
 
     private static Target getTarget(int targetId) {

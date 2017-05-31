@@ -4,16 +4,8 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.hbm2ddl.auto">update</property>
-        <property name="hibernate.connection.url">jdbc:mysql://urgant:3306/parser.test</property>
-        <property name="hibernate.connection.username">script</property>
-        <property name="hibernate.connection.password">YLO617hxs662</property>
-        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</property>
-        <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.connection.characterEncoding">utf8</property>
-
         <mapping class="ru.security59.parser.entities.Category"/>
+        <mapping class="ru.security59.parser.entities.Failure"/>
         <mapping class="ru.security59.parser.entities.Image"/>
         <mapping class="ru.security59.parser.entities.Product"/>
         <mapping class="ru.security59.parser.entities.Target"/>
