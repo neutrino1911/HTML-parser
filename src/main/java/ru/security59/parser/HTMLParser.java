@@ -4,12 +4,20 @@ import org.apache.commons.cli.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import ru.security59.parser.entities.Target;
+import ru.security59.parser.entities.Target_;
+import ru.security59.parser.entities.Vendor;
 import ru.security59.parser.shops.*;
 import ru.security59.parser.util.DualStream;
 import ru.security59.parser.util.Exporter;
 
 import javax.persistence.EntityManager;
-import java.io.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,27 +26,31 @@ import java.util.Properties;
 
 public class HTMLParser {
     public static String export_path;
-    public static boolean loadImages = true;
-    public static boolean simulation = false;
+    public static final boolean LOAD_IMAGES = true;
+    public static final boolean SIMULATION = false;
     public static EntityManager entityManager;
+    public static CriteriaBuilder criteriaBuilder;
 
-    public static void main(String[] args) throws FileNotFoundException {
-        initLog();
+    public static void main(String[] args) {
+        if (!initLog()) return;
         if (!initConfig()) return;
         CommandLine cmd = initCMD(args);
         if (cmd == null) return;
+
         /*Configuration configuration = new Configuration();
         EntityScanner.scanPackages("ru.security59.parser.entities").addTo(configuration);
         SessionFactory sessionFactory = configuration.buildSessionFactory();*/
+
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
         entityManager = sessionFactory.createEntityManager();
+        criteriaBuilder = entityManager.getCriteriaBuilder();
 
         if (cmd.hasOption("e"))
             export(cmd);
         else if (cmd.hasOption("p"))
-            parsePrices(cmd);
+            parsePrices(getTargets(cmd));
         else if (cmd.hasOption("t"))
-            parseTargets(cmd);
+            parseProducts(getTargets(cmd));
         else if (cmd.hasOption("vendor") && cmd.getArgList().size() > 0)
             parseVendor(Integer.parseInt(cmd.getArgList().get(0)));
 
@@ -46,16 +58,57 @@ public class HTMLParser {
         sessionFactory.close();
     }
 
-    private static Target getTarget(int targetId) {
-        System.out.println("Target id: " + targetId);
-        return entityManager.find(Target.class, targetId);
+    private static void parseProducts(List<Target> targets) {
+        AbstractShop shop;
+        for (Target target : targets) {
+            shop = getShop(target.getUrl());
+            if (shop == null) continue;
+            shop.parseItems(target);
+        }
     }
 
-    private static Shop getShop(String url) {
+    private static void parsePrices(List<Target> targets) {
+        AbstractShop shop;
+        for (Target target : targets) {
+            shop = getShop(target.getUrl());
+            if (shop == null) continue;
+            shop.parsePrices(target);
+        }
+    }
+
+    private static void parseVendor(int vendorId) {
+        CriteriaQuery<Target> criteria = criteriaBuilder.createQuery(Target.class);
+        Root<Target> root = criteria.from(Target.class);
+        criteria.select(root);
+        Vendor vendor = new Vendor();
+        vendor.setId(vendorId);
+        criteria.where(criteriaBuilder.equal(root.get(Target_.vendor), vendor));
+        List<Target> targets = entityManager.createQuery(criteria).getResultList();
+        parseProducts(targets);
+    }
+
+    private static List<Target> getTargets(CommandLine cmd) {
+        List<String> arguments = cmd.getArgList();
+        int firstTargetId;
+        int lastTargetId;
+        firstTargetId = Integer.parseInt(arguments.get(0));
+        if (arguments.size() > 1) {
+            lastTargetId = Integer.parseInt(arguments.get(1));
+        } else {
+            lastTargetId = firstTargetId;
+        }
+        CriteriaQuery<Target> criteria = criteriaBuilder.createQuery(Target.class);
+        Root<Target> root = criteria.from(Target.class);
+        criteria.select(root);
+        criteria.where(criteriaBuilder.between(root.get(Target_.id), firstTargetId, lastTargetId));
+        return entityManager.createQuery(criteria).getResultList();
+    }
+
+    private static AbstractShop getShop(String url) {
         int index = url.indexOf('/') + 2;
         String domain = url.substring(index, url.indexOf('/', index));
         System.out.println(domain);
-        Shop shop = null;
+        AbstractShop shop = null;
         switch (domain) {
             case "sec-s.ru":
                 shop = new LiderSB();
@@ -105,97 +158,20 @@ public class HTMLParser {
         }
     }
 
-    private static void parseTargets(int... targets) {
-        Target target;
-        Shop shop;
-        for (int targetId : targets) {
-            target = getTarget(targetId);
-            if (target == null) continue;
-            shop = getShop(target.getUrl());
-            if (shop == null) continue;
-            shop.parseItems(target);
-        }
-    }
-
-    private static void parseTargets(int firstTarget, int lastTarget) {
-        int[] targets = new int[lastTarget - firstTarget + 1];
-        for (int index = 0; index < targets.length; index++)
-            targets[index] = firstTarget + index;
-        parseTargets(targets);
-    }
-
-    private static void parseTargets(CommandLine cmd) {
-        List<String> arguments = cmd.getArgList();
-        int firstTarget;
-        int lastTarget;
-        firstTarget = Integer.parseInt(arguments.get(0));
-        if (arguments.size() > 1)
-            lastTarget = Integer.parseInt(arguments.get(1));
-        else lastTarget = firstTarget;
-        parseTargets(firstTarget, lastTarget);
-    }
-
-    private static void parsePrices(int... targets) {
-        Target target;
-        Shop shop;
-        for (int targetId : targets) {
-            target = getTarget(targetId);
-            if (target == null) continue;
-            shop = getShop(target.getUrl());
-            if (shop == null) continue;
-            shop.parsePricesByTarget(target);
-        }
-    }
-
-    private static void parsePrices(int firstTarget, int lastTarget) {
-        int[] targets = new int[lastTarget - firstTarget + 1];
-        for (int index = 0; index < targets.length; index++)
-            targets[index] = firstTarget + index;
-        parsePrices(targets);
-    }
-
-    private static void parsePrices(CommandLine cmd) {
-        List<String> arguments = cmd.getArgList();
-        int firstTarget;
-        int lastTarget;
-        firstTarget = Integer.parseInt(arguments.get(0));
-        if (arguments.size() > 1) lastTarget = Integer.parseInt(arguments.get(1));
-        else lastTarget = firstTarget;
-        parsePrices(firstTarget, lastTarget);
-    }
-
-    private static void parseVendor(int vendor) {
-        /*String query = null;
-        int[] targets = null;
+    private static boolean initLog() {
         try {
-            ResultSet resultSet;
-            query = "SELECT COUNT(id) AS count FROM Targets WHERE vend_id=" + vendor + ";";
-            resultSet = statement.executeQuery(query);
-            resultSet.next();
-            int size = resultSet.getInt("count");
-            query = "SELECT id FROM Targets WHERE vend_id=" + vendor + ";";
-            resultSet = statement.executeQuery(query);
-            targets = new int[size];
-            for (int index = 0; index < size; index++) {
-                resultSet.next();
-                targets[index] = resultSet.getInt("id");
-            }
-        } catch (SQLException e) {
-            System.out.println(query);
+            PrintStream out = new PrintStream(new FileOutputStream("out.log", true));
+            System.setOut(new DualStream(System.out, out));
+
+            PrintStream err = new PrintStream(new FileOutputStream("err.log", true));
+            System.setErr(new DualStream(System.err, err));
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
-        if (targets != null) parseTargets(targets);*/
-    }
-
-    private static void initLog() throws FileNotFoundException {
-        PrintStream out = new PrintStream(new FileOutputStream("out.log", true));
-        System.setOut(new DualStream(System.out, out));
-
-        PrintStream err = new PrintStream(new FileOutputStream("err.log", true));
-        System.setErr(new DualStream(System.err, err));
-
         DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
         System.out.println(dateFormat.format(new Date()));
+        return true;
     }
 
     private static boolean initConfig() {

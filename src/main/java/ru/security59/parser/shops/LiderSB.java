@@ -7,7 +7,7 @@ import ru.security59.parser.entities.Product;
 
 import java.util.LinkedList;
 
-public class LiderSB extends Shop {
+public class LiderSB extends AbstractShop {
     private static final String DOMAIN = "http://sec-s.ru";
 
     @Override

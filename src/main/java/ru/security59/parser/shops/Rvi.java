@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class Rvi extends Shop {
+public class Rvi extends AbstractShop {
     private static final String DOMAIN = "http://rvi-cctv.ru";
     private LinkedList<String[]> itemList = new LinkedList<>();
 

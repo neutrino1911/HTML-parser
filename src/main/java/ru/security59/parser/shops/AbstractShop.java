@@ -3,24 +3,18 @@ package ru.security59.parser.shops;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import ru.security59.parser.HTMLParser;
-import ru.security59.parser.entities.Failure;
-import ru.security59.parser.entities.Image;
-import ru.security59.parser.entities.Product;
-import ru.security59.parser.entities.Target;
+import ru.security59.parser.entities.*;
 
-import javax.persistence.TypedQuery;
-import java.io.*;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import static ru.security59.parser.HTMLParser.entityManager;
+import static ru.security59.parser.HTMLParser.*;
 
-public abstract class Shop {
-    private static final String DIRECTORY = HTMLParser.export_path;
-    private final boolean LOAD_IMAGES = HTMLParser.loadImages;
-    private static final boolean SIMULATION = HTMLParser.simulation;
-
+public abstract class AbstractShop {
     public void parseItems(Target target) {
         //Получаем ссылки на все товары категории
         LinkedList<String> links = getItemsURI(target.getUrl());
@@ -56,10 +50,12 @@ public abstract class Shop {
                 continue;
             }
 
-            TypedQuery<Product> query = entityManager
-                    .createQuery("SELECT P FROM Product P WHERE P.originId=:originId", Product.class);
-            query.setParameter("originId", product.getOriginId());
-            List<Product> list = query.getResultList();
+            CriteriaQuery<Product> criteria = criteriaBuilder.createQuery(Product.class);
+            Root<Product> root = criteria.from(Product.class);
+            criteria.select(root);
+            criteria.where(criteriaBuilder.equal(root.get(Product_.originId), product.getOriginId()));
+            List<Product> list = entityManager.createQuery(criteria).getResultList();
+
             if (list.isEmpty()) {
                 product.setId(target.getNextId());
                 entityManager.getTransaction().begin();
@@ -74,10 +70,12 @@ public abstract class Shop {
                 entityManager.getTransaction().commit();
                 updateCount++;
             }
+
+            //Загружаем изображения
             loadImages(product);
             try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
         }
-        System.out.printf("Inserted: %d\nUpdated: %d\nFailed: %d\nIgnored: %d\n",
+        System.out.printf("Inserted: %d%nUpdated: %d%nFailed: %d%nIgnored: %d%n",
                 insertCount,
                 updateCount,
                 failedCount,
@@ -85,58 +83,64 @@ public abstract class Shop {
         );
     }
 
-    public void parsePricesByTarget(Target target) {}
+    public void parsePrices(Target target) {
 
-    public void parsePricesByVendor(int vendorId) {}
+    }
 
-    void updateLaunchTime(int targetId) {}
+    protected abstract void getItemPrice(Product product);
 
     protected abstract void getItemData(Product product);
-    protected abstract void getItemPrice(Product product);
+
     protected abstract LinkedList<String> getItemsURI(String URI);
 
     private void loadImages(Product product) {
         for (Image image : product.getImages()) {
             if (LOAD_IMAGES) getImage(image);
-            TypedQuery<Image> query = entityManager.createQuery(
-                    "SELECT I FROM Image I WHERE I.product=:product AND I.url=:url",
-                    Image.class
-            );
-            query.setParameter("product", product);
-            query.setParameter("url", image.getUrl());
-            List<Image> list = query.getResultList();
-            if (list.isEmpty() && !SIMULATION) {
-                entityManager.getTransaction().begin();
-                entityManager.persist(image);
-                entityManager.getTransaction().commit();
+            CriteriaQuery<Image> criteria = criteriaBuilder.createQuery(Image.class);
+            Root<Image> root = criteria.from(Image.class);
+            criteria.select(root);
+            criteria.where(criteriaBuilder.equal(root.get(Image_.product), product));
+            criteria.where(criteriaBuilder.equal(root.get(Image_.url), image.getUrl()));
+            List<Image> list = entityManager.createQuery(criteria).getResultList();
+            if (!SIMULATION) {
+                if (list.isEmpty()) {
+                    entityManager.getTransaction().begin();
+                    entityManager.persist(image);
+                    entityManager.getTransaction().commit();
+                } else if (!image.getName().equals(list.get(0).getName())) {
+                    image.setId(list.get(0).getId());
+                    entityManager.getTransaction().begin();
+                    entityManager.merge(image);
+                    entityManager.getTransaction().commit();
+                }
             }
         }
     }
 
     private void getImage(Image image) {
         System.out.printf("        %s ", image.getUrl());
-        File file = new File(DIRECTORY + "img/" + image.getName());
+        File file = new File(export_path + "img/" + image.getName());
         if (file.exists()) {
             System.out.println("exists");
             return;
         }
         String fileName = image.getUrl().replaceAll("^.+/", "");
-        file = new File(DIRECTORY);
+        file = new File(export_path);
         if (!file.exists())
             if (file.mkdir()) System.out.println("Directory " + file + " is created!");
             else System.out.println("Failed to create " + file + " directory!");
-        file = new File(DIRECTORY + "new/");
+        file = new File(export_path + "new/");
         if (!file.exists())
             if (file.mkdir()) System.out.println("Directory " + file + " is created!");
             else System.out.println("Failed to create " + file + " directory!");
-        file = new File(DIRECTORY + "new/" + fileName);
+        file = new File(export_path + "new/" + fileName);
         if (!file.exists()) {
             try {//wget URI -O outfile
                 Process wget = new ProcessBuilder(
                         "wget",
                         image.getUrl(),
                         "-O",
-                        DIRECTORY + "new/" + fileName
+                        export_path + "new/" + fileName
                 ).start();
                 wget.waitFor();
                 Thread.sleep(100);
@@ -148,14 +152,14 @@ public abstract class Shop {
 
         try {//convert infile.png -resize '500x500>' -gravity Center -extent '500x500' outfile.jpg
             Process convert = new ProcessBuilder("convert",
-                    DIRECTORY + "new/" + fileName,
+                    export_path + "new/" + fileName,
                     "-resize",
                     "500x500>",
                     "-gravity",
                     "Center",
                     "-extent",
                     "500x500",
-                    DIRECTORY + "img/" + image.getUrl()
+                    export_path + "img/" + image.getUrl()
             ).start();
             convert.waitFor();
             Thread.sleep(100);

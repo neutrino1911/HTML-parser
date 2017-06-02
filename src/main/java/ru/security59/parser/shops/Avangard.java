@@ -1,22 +1,11 @@
 package ru.security59.parser.shops;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Node;
-import org.w3c.dom.Element;
 import ru.security59.parser.entities.Product;
 import ru.security59.parser.entities.Target;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashSet;
 import java.util.LinkedList;
 
-import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
-
-public class Avangard extends Shop {
+public class Avangard extends AbstractShop {
 
     @Override
     public void parseItems(Target target) {

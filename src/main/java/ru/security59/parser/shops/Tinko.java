@@ -7,7 +7,7 @@ import ru.security59.parser.entities.Product;
 
 import java.util.LinkedList;
 
-public class Tinko extends Shop {
+public class Tinko extends AbstractShop {
     private static final String DOMAIN = "http://www.tinko.ru";
 
     @Override
