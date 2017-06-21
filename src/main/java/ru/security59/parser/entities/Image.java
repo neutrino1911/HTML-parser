@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Images")
-public class Image {
+public class Image implements Comparable<Image> {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id") private int id;
     @Column(name = "name") private String name;
@@ -68,5 +68,10 @@ public class Image {
         int result = name.hashCode();
         result = 31 * result + url.hashCode();
         return result;
+    }
+
+    @Override
+    public int compareTo(Image o) {
+        return url.compareToIgnoreCase(o.url);
     }
 }

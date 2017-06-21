@@ -26,7 +26,7 @@ import java.util.Properties;
 
 public class HTMLParser {
     public static String export_path;
-    public static final boolean LOAD_IMAGES = true;
+    public static final boolean LOAD_IMAGES = false;
     public static final boolean SIMULATION = false;
     public static EntityManager entityManager;
     public static CriteriaBuilder criteriaBuilder;
@@ -124,6 +124,9 @@ public class HTMLParser {
                 break;
             case "bronegilet.ru":
                 shop = new Avangard();
+                break;
+            case "new-satro.ru":
+                shop = new NewSatro();
                 break;
             default:
                 System.out.println("Wrong target domain: " + domain);

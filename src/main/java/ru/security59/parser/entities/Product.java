@@ -3,8 +3,8 @@ package ru.security59.parser.entities;
 import ru.security59.parser.util.Transliterator;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
@@ -29,8 +29,20 @@ public class Product {
     @Column(name = "unit")          private String unit;
 
     public void addImage(Image image) {
-        if (images == null) images = new HashSet<>(10);
+        if (images == null) images = new TreeSet<>();
         if (images.size() < 10) images.add(image);
+    }
+
+    public String getImagesAsString() {
+        StringBuilder builder = new StringBuilder();
+        if (!(images instanceof TreeSet)) {
+            images = new TreeSet<>(images);
+        }
+        for (Image image : images) {
+            builder.append(image.getName());
+            builder.append(',');
+        }
+        return builder.substring(0, builder.length() - 1);
     }
 
     public String getAvailability() {
@@ -92,7 +104,7 @@ public class Product {
     }
 
     public Set<Image> getImages() {
-        if (images == null) images = new HashSet<>(10);
+        if (images == null) images = new TreeSet<>();
         return images;
     }
 

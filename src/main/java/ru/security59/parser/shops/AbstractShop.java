@@ -83,9 +83,7 @@ public abstract class AbstractShop {
         );
     }
 
-    public void parsePrices(Target target) {
-
-    }
+    public void parsePrices(Target target) {}
 
     protected abstract void getItemPrice(Product product);
 
@@ -93,7 +91,7 @@ public abstract class AbstractShop {
 
     protected abstract LinkedList<String> getItemsURI(String URI);
 
-    private void loadImages(Product product) {
+    void loadImages(Product product) {
         for (Image image : product.getImages()) {
             if (LOAD_IMAGES) getImage(image);
             CriteriaQuery<Image> criteria = criteriaBuilder.createQuery(Image.class);
