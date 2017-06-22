@@ -157,7 +157,7 @@ public abstract class AbstractShop {
                     "Center",
                     "-extent",
                     "500x500",
-                    export_path + "img/" + image.getUrl()
+                    export_path + "img/" + image.getName()
             ).start();
             convert.waitFor();
             Thread.sleep(100);

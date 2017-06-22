@@ -1,5 +1,6 @@
 package ru.security59.parser.entities;
 
+import ru.security59.parser.HTMLParser;
 import ru.security59.parser.util.Transliterator;
 
 import javax.persistence.*;
@@ -39,10 +40,11 @@ public class Product {
             images = new TreeSet<>(images);
         }
         for (Image image : images) {
+            if (builder.length() > 0) builder.append(", ");
+            builder.append(HTMLParser.export_url);
             builder.append(image.getName());
-            builder.append(',');
         }
-        return builder.substring(0, builder.length() - 1);
+        return builder.toString();
     }
 
     public String getAvailability() {

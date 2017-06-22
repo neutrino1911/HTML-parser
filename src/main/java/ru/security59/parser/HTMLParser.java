@@ -26,7 +26,8 @@ import java.util.Properties;
 
 public class HTMLParser {
     public static String export_path;
-    public static final boolean LOAD_IMAGES = false;
+    public static String export_url;
+    public static final boolean LOAD_IMAGES = true;
     public static final boolean SIMULATION = false;
     public static EntityManager entityManager;
     public static CriteriaBuilder criteriaBuilder;
@@ -185,7 +186,8 @@ public class HTMLParser {
             e.printStackTrace();
             return false;
         }
-        export_path = properties.getProperty("export_path");
+        export_path = properties.getProperty("export.path");
+        export_url = properties.getProperty("export.url");
         return true;
     }
 

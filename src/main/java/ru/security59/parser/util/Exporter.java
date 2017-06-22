@@ -44,7 +44,7 @@ public class Exporter {
                 "Ссылка_изображения",
                 "Наличие",
                 "Номер_группы",
-                //"Идентификатор_товара",
+                "Идентификатор_товара",
                 "Идентификатор_подраздела",
                 "Производитель",
                 "Гарантийный_срок",
@@ -118,10 +118,11 @@ public class Exporter {
             row.createCell(7).setCellValue(product.getImagesAsString());
             row.createCell(8).setCellValue(product.getAvailability());
             row.createCell(9).setCellValue(product.getCategory().getTiuId());
-            row.createCell(10).setCellValue(product.getCategory().getTiuCatId());
-            row.createCell(11).setCellValue(product.getVendor().getName());
-            row.createCell(12).setCellValue(product.getVendor().getWarranty());
-            row.createCell(13).setCellValue(product.getVendor().getCountry());
+            row.createCell(10).setCellValue(product.getId());
+            row.createCell(11).setCellValue(product.getCategory().getTiuCatId());
+            row.createCell(12).setCellValue(product.getVendor().getName());
+            row.createCell(13).setCellValue(product.getVendor().getWarranty());
+            row.createCell(14).setCellValue(product.getVendor().getCountry());
         }
     }
 
