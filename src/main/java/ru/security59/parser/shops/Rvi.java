@@ -1,14 +1,15 @@
-package ru.security59.parser;
+package ru.security59.parser.shops;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.security59.parser.entities.Product;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-class Rvi extends Shop {
+public class Rvi extends AbstractShop {
     private static final String DOMAIN = "http://rvi-cctv.ru";
     private LinkedList<String[]> itemList = new LinkedList<>();
 
@@ -25,7 +26,7 @@ class Rvi extends Shop {
         LinkedList<String> links = new LinkedList<>();
         Document doc;
         Elements elements;
-        doc = getDocument(uri, 10000);
+        doc = getDocument(uri);
         elements = doc.select(".cat-inner .cat-block a.cb-name");
         for (Element element : elements)
             if (element.attr("href").startsWith(DOMAIN)) links.add(element.attr("href"));
@@ -41,7 +42,7 @@ class Rvi extends Shop {
         String images = "";
         String availability;
 
-        Document doc = getDocument(uri, 10000);
+        Document doc = getDocument(uri);
         if (doc == null) return data;
         Elements elements;
 
@@ -90,8 +91,8 @@ class Rvi extends Shop {
     }
 
     @Override
-    protected void getItemData(Item item) {}
+    protected void getItemData(Product product) {}
 
     @Override
-    protected void getItemPrice(Item item) {}
+    protected void getItemPrice(Product product) {}
 }

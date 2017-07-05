@@ -1,6 +1,6 @@
-package ru.security59.parser;
+package ru.security59.parser.util;
 
-class Transliterator {
+public class Transliterator {
     private static String cyr2lat(char ch) {
         switch (ch) {
             case 'а':
@@ -74,7 +74,7 @@ class Transliterator {
         }
     }
 
-    static String cyr2lat(String s) {
+    public static String cyr2lat(String s) {
         StringBuilder sb = new StringBuilder(s.length() * 2);
         for (char ch : s.toCharArray()) {
             sb.append(cyr2lat(ch));

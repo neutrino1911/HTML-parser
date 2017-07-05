@@ -1,6 +1,6 @@
-/.idea
+.idea
 err.log
 out.log
 *.iml
+/db
 /target
-Будет удалено src/main/webapp/

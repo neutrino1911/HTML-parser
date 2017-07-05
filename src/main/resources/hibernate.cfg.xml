@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <mapping class="ru.security59.parser.entities.Category"/>
+        <mapping class="ru.security59.parser.entities.Failure"/>
+        <mapping class="ru.security59.parser.entities.Image"/>
+        <mapping class="ru.security59.parser.entities.Product"/>
+        <mapping class="ru.security59.parser.entities.Target"/>
+        <mapping class="ru.security59.parser.entities.Vendor"/>
+    </session-factory>
+</hibernate-configuration>

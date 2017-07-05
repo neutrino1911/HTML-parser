@@ -1,24 +1,31 @@
-package ru.security59.parser;
+package ru.security59.parser.util;
 
 import com.opencsv.CSVWriter;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import ru.security59.parser.entities.Product;
+import ru.security59.parser.entities.Product_;
+import ru.security59.parser.entities.Vendor;
+import ru.security59.parser.entities.Vendor_;
 
+import javax.persistence.Tuple;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
-import static ru.security59.parser.HTMLParser.statement;
+import static ru.security59.parser.HTMLParser.*;
 
-class Exporter {
+public class Exporter {
 
-    private static final String LINUX_PATH = "/home/neutrino/share/ru.security59.parser/";
-    private static final String WIN_PATH = "C:/ru.security59.parser/";
-    private static final String PATH = SystemUtils.IS_OS_LINUX ? LINUX_PATH : WIN_PATH;
+
     private static String[] tiuHeader;
     private LinkedList<String[]> list;
     private HSSFWorkbook workbook;
@@ -28,7 +35,7 @@ class Exporter {
         tiuHeader = new String[]{
                 "Код_товара",
                 "Название_позиции",
-                "Ключевые_слова",
+                //"Ключевые_слова",
                 "Описание",
                 "Тип_товара",
                 "Цена",
@@ -46,30 +53,33 @@ class Exporter {
         sites = new String[] {"tiu", "uv"};
     }
 
-    Exporter() {
+    public Exporter() {
         list = new LinkedList<>();
         workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("sheet");
         Row row = sheet.createRow(0);
         //Заполняем шапку
-        for (int i = 0; i < tiuHeader.length; i++)
+        for (int i = 0; i < tiuHeader.length; i++) {
             row.createCell(i).setCellValue(tiuHeader[i]);
+        }
     }
 
-    void write(int site, int[] vendors) {
+    public void write(int site, int firstVendor, int lastVendor) {
+        int[] vendors = new int[lastVendor - firstVendor + 1];
+        for (int i = 0; i < vendors.length; i++)
+            vendors[i] = firstVendor + i;
+        write(site, vendors);
+    }
+
+    private void write(int site, int[] vendors) {
         for (int vendor : vendors) {
-            try {
-                switch (site) {
-                    case 0:
-                        getTiuExport(vendor);
-                        break;
-                    case 1:
-                        getUvExport(vendor);
-                        break;
-                }
-            } catch (SQLException e) {
-                System.out.printf("Some trouble with vendorId: %d, site: %s\r\n", vendor, sites[site]);
-                e.printStackTrace();
+            switch (site) {
+                case 0:
+                    getTiuExport(vendor);
+                    break;
+                case 1:
+                    getUvExport(vendor);
+                    break;
             }
         }
         switch (site) {
@@ -82,53 +92,42 @@ class Exporter {
         }
     }
 
-    void write(int site, int vendor) {
-        int[] vendors = new int[]{vendor};
-        write(site, vendors);
-    }
-
-    void write(int site, int firstVendor, int lastVendor) {
-        int[] vendors = new int[lastVendor - firstVendor + 1];
-        for (int i = 0; i < vendors.length; i++)
-            vendors[i] = firstVendor + i;
-        write(site, vendors);
-    }
-
-    private void getTiuExport(int vendorId) throws SQLException {
+    private void getTiuExport(int vendorId) {
         HSSFSheet sheet = workbook.getSheet("sheet");
         Row row;
         //Запрашиваем данные из БД
-        ResultSet resultSet = statement.executeQuery("CALL getTiuImport(" + vendorId + ");");
+
+        CriteriaQuery<Product> criteria = criteriaBuilder.createQuery(Product.class);
+        Root<Product> productRoot = criteria.from(Product.class);
+        criteria.select(productRoot);
+        Join<Product, Vendor> vendorJoin = productRoot.join(Product_.vendor);
+        criteria.where(criteriaBuilder.equal(vendorJoin.get(Vendor_.id), vendorId));
+        List<Product> productList = entityManager.createQuery(criteria).getResultList();
+
         int rowNum = sheet.getLastRowNum() + 1;
         //Заполняем лист данными
-        while (resultSet.next()) {
-            try {
-                row = sheet.createRow(rowNum++);
-                row.createCell(0).setCellValue(resultSet.getInt("prod_id"));
-                row.createCell(1).setCellValue(resultSet.getString("prod_name"));
-                row.createCell(2).setCellValue(resultSet.getString("cat_keywords"));
-                row.createCell(3).setCellValue(resultSet.getString("prod_desc").replaceAll("&apos;", "'"));
-                row.createCell(4).setCellValue("r");
-                row.createCell(5).setCellValue(resultSet.getDouble("price"));
-                row.createCell(6).setCellValue(resultSet.getString("currency"));
-                row.createCell(7).setCellValue(resultSet.getString("unit"));
-                row.createCell(8).setCellValue(resultSet.getString("images"));
-                row.createCell(9).setCellValue(resultSet.getString("availability"));
-                row.createCell(10).setCellValue(resultSet.getInt("tiu_id"));
-                row.createCell(11).setCellValue(resultSet.getInt("prod_id"));
-                row.createCell(12).setCellValue(resultSet.getInt("tiu_cat"));
-                row.createCell(13).setCellValue(resultSet.getString("vend_name"));
-                row.createCell(14).setCellValue(resultSet.getInt("warranty"));
-                row.createCell(15).setCellValue(resultSet.getString("country"));
-            } catch (Exception e) {
-                System.out.println(resultSet.getInt("prod_id"));
-                e.printStackTrace();
-            }
+        for (Product product : productList) {
+            row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(product.getId());
+            row.createCell(1).setCellValue(product.getName());
+            row.createCell(2).setCellValue(product.getDescription());
+            row.createCell(3).setCellValue("r");
+            row.createCell(4).setCellValue(product.getPrice());
+            row.createCell(5).setCellValue(product.getCurrency());
+            row.createCell(6).setCellValue(product.getUnit());
+            row.createCell(7).setCellValue(product.getImagesAsString());
+            row.createCell(8).setCellValue(product.getAvailability());
+            row.createCell(9).setCellValue(product.getCategory().getTiuId());
+            row.createCell(10).setCellValue(product.getId());
+            row.createCell(11).setCellValue(product.getCategory().getTiuCatId());
+            row.createCell(12).setCellValue(product.getVendor().getName());
+            row.createCell(13).setCellValue(product.getVendor().getWarranty());
+            row.createCell(14).setCellValue(product.getVendor().getCountry());
         }
     }
 
-    private void getUvExport(int vendorId) throws SQLException {
-        ResultSet resultSet = statement.executeQuery("CALL getUvImport(" + vendorId + ");");
+    private void getUvExport(int vendorId) {
+        /*ResultSet resultSet = statement.executeQuery("CALL getUvImport(" + vendorId + ");");
         String[] line;
         while (resultSet.next()) {
             line = new String[11];
@@ -147,13 +146,12 @@ class Exporter {
             line[9] = resultSet.getString("seo_url");
             line[10] = resultSet.getString("cat_keywords");
             list.add(line);
-        }
+        }*/
     }
 
     private void writeXLS() {
         if (!checkDirectory()) return;
-        String filename = PATH + "tiuImport.xls";
-        //String filename = "/home/neutrino/import.xls";
+        String filename = export_path + "tiuExport.xls";
         FileOutputStream out;
         try {
             out = new FileOutputStream(filename);
@@ -168,7 +166,7 @@ class Exporter {
 
     private void writeCSV() {
         if (!checkDirectory()) return;
-        String filename = PATH + "uvImport.csv";
+        String filename = export_path + "uvImport.csv";
         try (FileOutputStream out = new FileOutputStream(filename);
              CSVWriter writer = new CSVWriter(new OutputStreamWriter(out, "windows-1251"), '\t')) {
             writer.writeAll(list, false);
@@ -177,7 +175,7 @@ class Exporter {
     }
 
     private boolean checkDirectory() {
-        File file = new File(PATH);
+        File file = new File(export_path);
         if (!file.exists())
             if (file.mkdir()) {
                 System.out.println("Directory" + file + " is created!");

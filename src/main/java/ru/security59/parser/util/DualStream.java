@@ -1,12 +1,12 @@
-package ru.security59.parser;
+package ru.security59.parser.util;
 
 import java.io.PrintStream;
 
-class DualStream extends PrintStream {
+public class DualStream extends PrintStream {
 
     private PrintStream out;
 
-    DualStream(PrintStream out1, PrintStream out2) {
+    public DualStream(PrintStream out1, PrintStream out2) {
         super(out1);
         this.out = out2;
     }

@@ -1,8 +1,9 @@
-package ru.security59.parser;
+package ru.security59.parser.shops;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.security59.parser.entities.Product;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,9 +11,8 @@ import java.util.Map;
 
 import static org.apache.commons.lang3.StringEscapeUtils.escapeHtml4;
 
-class Nag extends Shop {
-    private static final String DOMAIN = "http://shop.nag.ru";
-    private LinkedList<String[]> itemList = new LinkedList<>();
+public class Nag extends AbstractShop {
+    private static final String DOMAIN = "https://shop.nag.ru";
 
     LinkedList<String[]> getPriceList(LinkedList<String[]> config, LinkedList<String[]> export) {
         return null;
@@ -65,13 +65,19 @@ class Nag extends Shop {
     @Override
     protected LinkedList<String> getItemsURI(String uri) {
         LinkedList<String> links = new LinkedList<>();
-        if (!uri.endsWith("?count=0")) uri += "?count=0";
-        Document doc = getDocument(uri, 10000);
+        if (!uri.endsWith("?count=0")) {
+            uri += "?count=0";
+        }
+        Document doc = getDocument(uri);
         String selector = "div.homepage_cataloge > div.item_info > h2 > a";
         Elements elements = doc.select(selector);
-        for (Element element : elements)
-            if (element.attr("href").startsWith(DOMAIN)) links.add(element.attr("href"));
-            else links.add(DOMAIN + element.attr("href"));
+        for (Element element : elements) {
+            if (element.attr("href").startsWith(DOMAIN)) {
+                links.add(element.attr("href"));
+            } else {
+                links.add(DOMAIN + element.attr("href"));
+            }
+        }
         return links;
     }
 
@@ -87,7 +93,7 @@ class Nag extends Shop {
         String images = "";
         String availability = "3";
 
-        Document doc = getDocument(uri, 10000);
+        Document doc = getDocument(uri);
         if (doc == null) return data;
         Elements elements;
 
@@ -130,8 +136,8 @@ class Nag extends Shop {
     }
 
     @Override
-    protected void getItemData(Item item) {}
+    protected void getItemData(Product product) {}
 
     @Override
-    protected void getItemPrice(Item item) {}
+    protected void getItemPrice(Product product) {}
 }

@@ -1,11 +1,6 @@
-package ru.security59.parser;
+package ru.security59.parser.shops;
 
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.select.Elements;
-
-class Cabeus/* extends Shop*/ {
+public class Cabeus/* extends AbstractShop*/ {
     /*@Override
     LinkedList<String[]> getPriceList(LinkedList<String[]> config, LinkedList<String[]> export) {
         return null;

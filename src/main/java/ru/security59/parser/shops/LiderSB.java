@@ -1,12 +1,13 @@
-package ru.security59.parser;
+package ru.security59.parser.shops;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import ru.security59.parser.entities.Product;
 
 import java.util.LinkedList;
 
-class LiderSB extends Shop {
+public class LiderSB extends AbstractShop {
     private static final String DOMAIN = "http://sec-s.ru";
 
     @Override
@@ -22,15 +23,15 @@ class LiderSB extends Shop {
     }
 
     @Override
-    protected void getItemData(Item item) {
-        Document doc = getDocument(item.getOriginURL());
+    protected void getItemData(Product product) {
+        Document doc = getDocument(product.getOriginURL());
         if (doc == null) return;
         Elements elements;
 
         //Название
         elements = doc.select("div.h1-wr.h1-shop > h1");
         if (elements.size() > 0)
-            item.setName(elements.get(0).childNode(0).toString());
+            product.setName(elements.get(0).childNode(0).toString());
 
         //Описание
         elements = doc.select("div.shop2-product-desc div.block-tov-body");
@@ -40,39 +41,39 @@ class LiderSB extends Shop {
             String description;
             description = elements.get(0).childNode(1).unwrap().toString().replaceAll("Приобретая.+\\.", "");
             if (elements.size() > 1) description += "<br>" + elements.get(1).childNode(1);
-            item.setDescription(description);
+            product.setDescription(description);
         }
 
         //Цена
         elements = doc.select("div.price-product-fix > span");
         if (elements.size() > 0)
-            item.setPrice(elements.get(0).childNode(0).toString());
+            product.setPrice(elements.get(0).childNode(0).toString());
 
         //Наличие
-        if ("0".equals(item.getPrice())) item.setAvailability("0");
-        else item.setAvailability("+");
+        if ("0".equals(product.getPrice())) product.setAvailability("0");
+        else product.setAvailability("+");
 
         //Изображение
         elements = doc.select("div.product-image > a");
         for (Element element : elements) {
-            String image = element.attr("href").replaceAll(",", "%2C");
-            item.addImage(image.startsWith("http") ? image : DOMAIN + image);
+            /*String image = element.attr("href").replaceAll(",", "%2C");
+            product.addImage(image.startsWith("http") ? image : DOMAIN + image);*/
         }
     }
 
     @Override
-    protected void getItemPrice(Item item) {
-        Document doc = getDocument(item.getOriginURL());
+    protected void getItemPrice(Product product) {
+        Document doc = getDocument(product.getOriginURL());
         if (doc == null) return;
         Elements elements;
 
         //Цена
         elements = doc.select("div.price-product-fix > span");
         if (elements.size() > 0)
-            item.setPrice(elements.get(0).childNode(0).toString());
+            product.setPrice(elements.get(0).childNode(0).toString());
 
         //Наличие
-        if ("0".equals(item.getPrice())) item.setAvailability("0");
-        else item.setAvailability("+");
+        if ("0".equals(product.getPrice())) product.setAvailability("0");
+        else product.setAvailability("+");
     }
 }
