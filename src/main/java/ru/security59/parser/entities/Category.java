@@ -5,12 +5,22 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Categories")
 public class Category {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") private int id;
-    @Column(name = "name") private String name;
-    @Column(name = "tiu_id") private int tiuId;
-    @Column(name = "uv_id") private int uvId;
-    @Column(name = "tiu_cat_id") private int tiuCatId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "tiu_id")
+    private int tiuId;
+
+    @Column(name = "uv_id")
+    private int uvId;
+
+    @Column(name = "tiu_cat_id")
+    private int tiuCatId;
 
     public int getId() {
         return id;

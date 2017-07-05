@@ -13,21 +13,47 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 @Entity
 @Table(name = "Products")
 public class Product {
-    @Id @Column(name = "id")        private int id;
+    @Id
+    @Column(name = "id")
+    private int id;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cat_id")    private Category category;
+    @JoinColumn(name = "cat_id")
+    private Category category;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vend_id")   private Vendor vendor;
-    @Column(name = "availability")  private String availability;
-    @Column(name = "currency")      private String currency;
-    @Column(name = "description")   private String description;
-    @OneToMany(mappedBy = "product")private Set<Image> images;
-    @Column(name = "name")          private String name;
-    @Column(name = "origin_id")     private String originId;
-    @Column(name = "origin_url")    private String originURL;
-    @Column(name = "price")         private String price;
-    @Column(name = "seo_url")       private String seoURL;
-    @Column(name = "unit")          private String unit;
+    @JoinColumn(name = "vend_id")
+    private Vendor vendor;
+
+    @Column(name = "availability")
+    private String availability;
+
+    @Column(name = "currency")
+    private String currency;
+
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @OneToMany(mappedBy = "product")
+    private Set<Image> images;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "origin_id")
+    private String originId;
+
+    @Column(name = "origin_url", length = 1023)
+    private String originURL;
+
+    @Column(name = "price")
+    private String price;
+
+    @Column(name = "seo_url")
+    private String seoURL;
+
+    @Column(name = "unit")
+    private String unit;
 
     public void addImage(Image image) {
         if (images == null) images = new TreeSet<>();

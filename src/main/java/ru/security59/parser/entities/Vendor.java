@@ -5,11 +5,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Vendors")
 public class Vendor {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") private int id;
-    @Column(name = "name") private String name;
-    @Column(name = "country") private String country;
-    @Column(name = "warranty") private int warranty;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "warranty")
+    private int warranty;
 
     public int getId() {
         return id;

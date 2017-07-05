@@ -7,9 +7,14 @@ import javax.persistence.*;
 public class Failure {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") private int id;
-    @Column(name = "target_id") private int targetId;
-    @Column(name = "url") private String URL;
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "target_id")
+    private int targetId;
+
+    @Column(name = "url", length = 1023)
+    private String URL;
 
     public int getId() {
         return id;

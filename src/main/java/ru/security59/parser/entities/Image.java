@@ -5,12 +5,20 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Images")
 public class Image implements Comparable<Image> {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") private int id;
-    @Column(name = "name") private String name;
-    @Column(name = "url") private String url;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "url", length = 1023)
+    private String url;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prod_id") private Product product;
+    @JoinColumn(name = "prod_id")
+    private Product product;
 
     public Image() {}
 

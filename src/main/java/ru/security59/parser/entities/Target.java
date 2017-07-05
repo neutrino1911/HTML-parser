@@ -5,15 +5,30 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Targets")
 public class Target {
-    @Id @Column(name = "id") private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cat_id") private Category category;
-    @Column(name = "last_id")  private int lastId;
+    @JoinColumn(name = "cat_id")
+    private Category category;
+
+    @Column(name = "last_id")
+    private int lastId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vend_id") private Vendor vendor;
-    @Column(name = "currency") private String currency;
-    @Column(name = "unit") private String unit;
-    @Column(name = "url")  private String url;
+    @JoinColumn(name = "vend_id")
+    private Vendor vendor;
+
+    @Column(name = "currency")
+    private String currency;
+
+    @Column(name = "unit")
+    private String unit;
+
+    @Column(name = "url", length = 1023)
+    private String url;
 
     public int getId() {
         return id;
